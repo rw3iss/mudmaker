@@ -1,0 +1,341 @@
+@import "../mixins";
+
+i {
+  font-family: "Font Awesome";
+  font-size: var(--font-icon);
+  padding: 5px;
+  border-radius: var(--radius-default);
+}
+
+// Common page parts / controls ///////////////////////////////////////////////
+
+// Common header on most child pages
+app-page-header {
+  width: 100%;
+}
+
+/* BUTTONS ----------------------------------- */
+
+button,
+.button {
+  font-size: var(--font-btn);
+  //line-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  padding: var(--pad-xs) var(--pad-lg);
+  padding: calc(var(--pad-xs) + 1px) var(--pad-lg);
+  background: $color-primary;
+  border-radius: var(--radius-btn);
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.25s linear;
+  border: none;
+
+  @include mobile {
+    padding: calc(var(--pad-sm) + 1px) var(--pad-lg);
+  }
+
+  &:active {
+    position: relative;
+    transform: scale(0.99, 0.99);
+  }
+
+  &[disabled] {
+    background: $color-light-grey;
+  }
+
+  &.no-fill {
+    display: inline-block;
+    margin: 0 auto;
+  }
+
+  &[color="primary"] {
+    color: white;
+    background: $color-primary;
+  }
+
+  &[color="outline"] {
+    color: $color-light-black;
+    border: 1px solid $color-light-black;
+    background: none;
+  }
+
+  &.gradient {
+    @include button-gradient();
+  }
+
+  &.icon {
+    min-width: 32px;
+    min-height: 32px;
+    border-radius: 32px;
+    padding: var(--pad-sm);
+    color: white;
+    background-color: $color-primary;
+    transition: background-color 0.25s linear;
+
+    &:hover {
+      color: white;
+      background-color: $color-primary-hover;
+      transition: background-color 0.25s linear;
+    }
+  }
+
+  &.space-xs {
+    margin: var(--font-xs) 0;
+  }
+
+  &.space-sm {
+    margin: var(--font-sm) 0;
+  }
+
+  &.space-md {
+    margin: var(--font-md) 0;
+  }
+
+  &.space-lg {
+    margin: var(--font-lg) 0;
+  }
+
+  &.left {
+    text-align: left;
+  }
+
+  &.right {
+    text-align: right;
+  }
+
+  &.rounded {
+    border-radius: var(--radius-btn);
+  }
+
+  &.mini {
+    line-height: 1.5em;
+    padding: 0.25em 1em;
+    border-radius: var(--radius-lg);
+
+    .mat-button-wrapper {
+      font-size: 0.75em;
+      line-height: 1.5em;
+    }
+  }
+
+  &.small {
+    font-size: 1em;
+    line-height: 2em;
+    padding: 0.25em 1.5em;
+    border-radius: var(--radius-lg);
+
+    .mat-button-wrapper {
+      font-size: 1em;
+      line-height: 2em;
+    }
+  }
+
+  &.large {
+    font-size: 1em;
+    line-height: 2em;
+    padding: 0.25em 1.25em;
+    border-radius: var(--radius-lg);
+
+    .mat-button-wrapper {
+      font-size: 1em;
+      line-height: 2em;
+    }
+  }
+
+  &.no-pad {
+    padding: 0;
+  }
+
+  // button that looks like a dropdown, but initiates a dialog or drawer
+  &.select-button {
+    font-size: var(--font-md);
+    line-height: 1em;
+    position: relative;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 2em;
+    padding: 0.75em 0.5em;
+    color: $color-light-black;
+    background: $color-input-bg;
+
+    &.cdk-focused {
+      background: $color-input-bg;
+    }
+
+    &::after {
+      font-family: "Material Icons", sans-serif;
+      font-size: 1.5em;
+      font-weight: 500;
+      position: absolute;
+      top: 0.5em;
+      right: 0;
+      width: 1.5em;
+      height: 1.5em;
+      content: "keyboard_arrow_down";
+      color: $color-primary;
+    }
+  }
+
+  &[color="green"] {
+    background: $color-green;
+    color: white;
+  }
+
+  &.outline {
+    background: none;
+    color: $color-primary;
+    border: 1px solid $color-primary;
+    position: relative;
+    z-index: 1;
+    background: white;
+    padding: var(--pad-xs) var(--pad-lg);
+
+    @include mobile {
+      padding: var(--pad-sm) var(--pad-lg);
+    }
+
+    &.gradient {
+      display: flex;
+      border-radius: var(--radius-btn);
+      font-size: var(--font-btn);
+      font-weight: 500;
+      box-shadow: 0 0 6px 0 rgba(157, 96, 212, 0.5);
+      border: solid 1px transparent;
+      background-image: linear-gradient(90deg, $color-primary, $color-secondary),
+      linear-gradient(45deg, $color-primary, $color-secondary);
+      background-origin: border-box;
+      background-clip: content-box, border-box;
+      box-shadow: 2px 1000px 1px #fff inset;
+      color: $color-primary;
+
+      .label {
+        //font-size: var(--font-btn);
+        @include text-gradient();
+      }
+    }
+
+    @include mobile {
+      border: 1px solid $color-primary;
+
+      &.gradient {
+        border: solid 2px transparent;
+      }
+    }
+  }
+
+  &.outline-red {
+    color: $color-warn;
+    background: none;
+    border: 1px solid $color-lighter-grey;
+  }
+}
+
+//ripple effect
+.button,
+.btn-option {
+  &.ripple {
+    background-position: center;
+    transition: background 0.8s;
+  }
+
+  &.ripple:hover {
+    background: $color-primary radial-gradient(circle, transparent 1%, $color-primary 1%) center/15000%;
+  }
+
+  &.ripple:active {
+    background-color: $color-primary-hover;
+    background-size: 100%;
+    transition: background 0s;
+  }
+}
+
+.icon-button {
+  @include icon-button;
+}
+
+// Button lists (ie. for drawers)
+.button-list {
+  width: 100%;
+
+  button {
+    width: 100%;
+    padding: var(--pad-sm);
+    justify-content: flex-start;
+    border-radius: 0;
+
+    &.selected {
+      border-left: 3px solid $color-primary;
+      padding-left: calc(var(--pad-sm) - 3px);
+
+      &::after {
+        position: absolute;
+        top: 0.5em;
+        right: var(--pad-xs);
+        height: 1.5em;
+        width: 1.5em;
+        font-size: 1.5em;
+        content: "check_circle";
+        font-family: "Material Icons", sans-serif;
+        font-weight: 500;
+        color: $color-primary;
+      }
+    }
+  }
+}
+
+.loader {
+  display: inline-block;
+  width: 45px;
+  height: 45px;
+
+  &:after {
+    content: " ";
+    display: block;
+    width: 32px;
+    height: 32px;
+    margin: 0;
+    border-radius: 50%;
+    border: 6px solid $color-primary;
+    border-color: $color-primary transparent $color-primary transparent;
+    animation: loading 1.2s linear infinite;
+  }
+
+  @keyframes loading {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  &.large {
+    width: 76px;
+    height: 76px;
+
+    &:after {
+      width: 64px;
+      height: 64px;
+    }
+  }
+}
+
+.link-button {
+  color: $color-primary;
+
+  &.as-button {
+    padding: var(--pad-sm);
+    font-size: var(--font-btn);
+    font-weight: bold;
+    //background: white;
+    border-radius: var(--radius-default);
+  }
+
+  &:active {
+    background: #fafafa;
+  }
+}

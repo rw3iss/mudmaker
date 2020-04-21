@@ -1,0 +1,144 @@
+// Breakpoint helpers (follows material guidelines https://material-ui.com/customization/breakpoints/)
+
+@mixin view-xs() {
+	@media all and (max-width: 599px) {
+		@content;
+	}
+}
+
+@mixin view-sm() {
+	@media all and (max-width: 959px) {
+		@content;
+	}
+}
+
+@mixin view-md() {
+	@media all and (max-width: 1279px) {
+		@content;
+	}
+}
+
+@mixin view-lg() {
+	@media all and (max-width: 1919px) {
+		@content;
+	}
+}
+
+@mixin view-xl() {
+	@media all and (min-width: 1920px) {
+		@content;
+	}
+}
+
+// Padding mixins ----------------------------
+
+@mixin pad-xs {
+	padding: var(--font-xs) 0;
+}
+
+@mixin pad-sm {
+	padding: var(--font-sm) 0;
+}
+
+@mixin pad-md {
+	padding: var(--font-md) 0;
+}
+
+@mixin pad-lg {
+	padding: var(--font-lg) 0;
+}
+
+@mixin pad-xl {
+	padding: var(--font-xl) 0;
+}
+
+// Padding mixins ----------------------------
+
+@mixin space-xs {
+	margin: var(--font-xs) 0;
+}
+
+@mixin space-sm {
+	margin: var(--font-sm) 0;
+}
+
+@mixin space-md {
+	margin: var(--font-md) 0;
+}
+
+@mixin space-lg {
+	margin: var(--font-lg) 0;
+}
+
+// Flex shortcuts -------------------------------------------------------------
+
+@mixin flex {
+	display: flex;
+}
+
+@mixin flexcol {
+	display: flex;
+	flex-direction: column;
+}
+
+@mixin flexcenter {
+	@include flex;
+	align-items: center;
+	justify-content: center;
+}
+
+@mixin flexrowcenter {
+	@include flex;
+	align-items: center;
+}
+
+@mixin flexcolcenter {
+	@include flexcol;
+	align-items: center;
+	justify-content: center;
+}
+
+@mixin flexcol-fill {
+	flex: 1 0 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+// Responsive breakpoints
+
+@mixin mobile {
+	/* Portrait and Landscape */
+	@media only screen and (min-device-width: 0px) and (max-device-width: 768px) and (-webkit-min-device-pixel-ratio: 2) {
+		@content;
+	}
+}
+
+@mixin tablet_and_larger {
+	@media (min-width: 768px) {
+		@content;
+	}
+}
+
+@mixin not-mobile() {
+	@media (min-width: 768px) and (-webkit-min-device-pixel-ratio: 1) {
+		@content;
+	}
+}
+
+@mixin desktop {
+	@media (min-width: 1024px) {
+		@content;
+	}
+}
+
+@mixin desktop_qhd {
+	@media (min-width: 1440px) {
+		@content;
+	}
+}
+
+@mixin desktop_4k {
+	@media (min-width: 2160px) {
+		@content;
+	}
+}

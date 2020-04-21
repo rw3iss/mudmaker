@@ -1,0 +1,28 @@
+$fa-font-path: "/assets/fonts" !default;
+
+@font-face {
+	font-family: "Font Awesome";
+	font-style: normal;
+	font-weight: 400;
+	font-display: auto;
+	src: url("#{$fa-font-path}/fa-solid-400.eot");
+	src: url("#{$fa-font-path}/fa-solid-400.eot?#iefix") format("embedded-opentype"),
+		url("#{$fa-font-path}/fa-solid-400.woff2") format("woff2"),
+		url("#{$fa-font-path}/fa-solid-400.woff") format("woff"),
+		url("#{$fa-font-path}/fa-solid-400.ttf") format("truetype"),
+		url("#{$fa-font-path}/fa-solid-400.svg#fontawesome") format("svg");
+}
+
+.icon {
+	color: black;
+}
+
+.far {
+	font-family: "Font Awesome";
+	font-weight: 400;
+}
+
+.fa {
+	font-family: "Font Awesome";
+	font-weight: 400;
+}

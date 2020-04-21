@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+
+  db:
+    image:          mysql
+    container_name: tripora-mysql
+    command:        --default-authentication-plugin=mysql_native_password
+    restart:        always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE:      tripora
+      MYSQL_USER:          mysql
+      MYSQL_PASSWORD:      mysql
+    ports:
+      - 23306:3306
+      - 3306
+    networks:
+      - tripora
+
+  rabbitmq:
+    image:          "rabbitmq:3-management"
+    container_name: "tripora-rabbitmq"
+    hostname:       "tripora-rabbitmq"
+    restart:        always
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER:  "rabbitmq"
+      RABBITMQ_DEFAULT_PASS:  "agaeq14"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "35672:15672"
+      - "25672:5672"
+      - "5672"
+
+    networks:
+      tripora:
+
+networks:
+  tripora:

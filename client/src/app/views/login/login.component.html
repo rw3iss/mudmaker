@@ -1,0 +1,35 @@
+<div view id="login" class="pad-view">
+
+    <div class="inner">
+        <h1 class="text-gradient">Login</h1>
+
+        <form class="form">
+            <div class="field">
+                <div class="input">
+                    <input type="text" name="login" autocomplete="email" placeholder="Email or Username..."
+                           [(ngModel)]="email"/>
+                </div>
+            </div>
+            <div class="field">
+                <div class="input">
+                    <input type="password" name="password" autocomplete="password" placeholder="Password..."
+                           [(ngModel)]="password"/>
+                </div>
+            </div>
+
+            <div class="field">
+                <button class="button gradient" (click)="tryLogin()">Login</button>
+            </div>
+
+            <div class="status error" *ngIf="error">{{error}}</div>
+
+            <div class="field">
+                <div class="button outline gradient" routerLink="/join">
+                    <div class="label">Create an Account</div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    
+</div>

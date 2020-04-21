@@ -1,0 +1,20 @@
+@mixin button-gradient() {
+	background: $color-primary;
+	background: -webkit-linear-gradient(top right, $color-primary, $color-secondary);
+	background: -moz-linear-gradient(top right, $color-primary, $color-secondary);
+	background: linear-gradient(to top right, $color-primary, $color-secondary);
+}
+
+@mixin panel-shadow {
+	box-shadow: 2px 2px 20px rgba(0, 0, 0, 0.2);
+}
+
+@mixin icon-button {
+	max-width: 64px;
+	max-height: 64px;
+	cursor: pointer;
+	padding: var(--pad-sm);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

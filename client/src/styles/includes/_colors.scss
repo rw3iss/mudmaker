@@ -1,0 +1,33 @@
+$color-app-bg: #eeedec;
+
+$color-black: #000;
+$color-dark-black: #333;
+$color-white: white;
+$color-light-black: #25283d;
+$color-grey: #7a7c8e;
+$color-light-grey: #727487;
+$color-lighter-grey: rgba(114, 116, 135, 0.3);
+$color-blue: #035fcf;
+$color-blue-gradient: #2365af;
+$color-input-bg: #f6f7f7;
+$color-green: #00d490;
+$color-semi-opaque: rgba(255, 255, 255, 0.9);
+
+// #0d9de2, #edfb2f
+
+$color-primary: $color-blue;
+$color-primary-secondary: darken($color-blue, 10%);
+$color-primary-hover: lighten($color-blue, 10%);
+
+$color-secondary: #00d490;
+$color-gradient-1: #0d9de2;
+$color-gradient-2: #edfb2f;
+
+$color-success: $color-green;
+$color-warn: red;
+
+$color-light-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+
+// actual values:
+
+$color-view-bg: #f7f9fa;

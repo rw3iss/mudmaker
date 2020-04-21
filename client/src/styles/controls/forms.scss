@@ -1,0 +1,106 @@
+@import "../mixins";
+
+input,
+textarea,
+select {
+  font-size: var(--font-input);
+  font-family: var(--font-default);
+  border: 1px solid $color-lighter-grey;
+  border-radius: var(--radius-input);
+  padding: var(--pad-xs);
+  outline: none;
+
+  @include mobile {
+    padding: var(--pad-sm);
+  }
+}
+
+// override chrome autocomplete background colors
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px $color-input-bg inset !important;
+}
+
+input:-internal-autofill-selected {
+  background: none;
+}
+
+input.mat-input-element {
+  &[readonly="true"] {
+    color: $color-lighter-grey;
+  }
+}
+
+.mock-input {
+  padding: var(--pad-input);
+  color: $color-light-grey;
+  border: 1px solid $color-lighter-grey;
+  border-radius: var(--radius-default);
+  background: $color-input-bg;
+
+  &.textarea {
+    min-height: 3.5em;
+  }
+
+  option {
+    font-size: var(--font-xl);
+    line-height: 2em;
+    padding: var(--pad-lg);
+    text-align: left;
+  }
+}
+
+.form {
+  position: relative;
+  margin: var(--pad-sm) 0 0;
+
+  @include mobile {
+    font-size: 2rem;
+    width: 100%;
+  }
+
+  .row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: var(--pad-xs) 0;
+
+    &.center {
+      justify-content: center;
+    }
+  }
+
+  .status {
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    text-align: center;
+    padding: var(--pad-lg) var(--pad-sm);
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: var(--pad-xs);
+
+    .input {
+      //padding: var(--pad-input);
+      //border-radius: var(--radius-btn);
+      box-shadow: none;
+      //border: 1px solid $color-lighter-grey;
+      //font-size: var(--font-md);
+
+      input {
+        width: 100%;
+      }
+    }
+
+    .error {
+      color: $color-warn;
+      padding: var(--pad-xs) 0;
+    }
+  }
+}

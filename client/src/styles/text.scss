@@ -1,0 +1,60 @@
+@import "mixins";
+
+/* Global default text sizing*/
+.text-xs {
+	@include text-xs;
+}
+
+.text-sm {
+	@include text-sm;
+}
+
+.text-md {
+	@include text-md;
+}
+
+.text-lg {
+	@include text-lg;
+}
+
+.section-header-bold {
+	font-size: 1.25em;
+	font-weight: bold;
+	margin: 0;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+h1,
+.h1 {
+	@include header-1;
+}
+
+h2,
+.h2 {
+	@include header-2;
+}
+
+h3,
+.h3 {
+	@include header-3;
+}
+
+h4,
+.h4 {
+	@include header-4;
+}
+
+.header-sub {
+	@include header-sub;
+}
+
+.header-sub-2 {
+	@include header-sub-2;
+}
+
+.text-gradient {
+	@include text-gradient();
+}

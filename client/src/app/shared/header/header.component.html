@@ -1,0 +1,18 @@
+<div class="app-header" flex="row">
+
+    <div class="logo">
+
+        <a routerLink="/">MUDMaker</a>
+
+    </div>
+
+    <nav class="navigation col col-larger">
+
+        <a routerLink="/editor" *ngIf="isLoggedIn">Editor</a>
+        <a routerLink="/logout" *ngIf="isLoggedIn">Logout</a>
+        <a routerLink="/profile" *ngIf="!isLoggedIn">Login</a>
+        <a routerLink="/help">Help</a>
+
+    </nav>
+
+</div>

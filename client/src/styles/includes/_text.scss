@@ -1,0 +1,67 @@
+// Text mixins ----------------------------
+
+@mixin text-xs {
+	font-size: var(--font-xs);
+}
+
+@mixin text-sm {
+	font-size: var(--font-sm);
+}
+
+@mixin text-md {
+	font-size: var(--font-md);
+}
+
+@mixin text-lg {
+	font-size: var(--font-lg);
+}
+
+@mixin text-xl {
+	font-size: var(--font-xl);
+}
+
+@mixin header {
+	margin: 0;
+}
+
+@mixin header-1 {
+	@include header;
+	font-size: var(--font-xxl);
+	font-weight: 700;
+}
+
+@mixin header-2 {
+	@include header;
+	font-size: var(--font-lg);
+	font-weight: 900;
+}
+
+@mixin header-3 {
+	@include header;
+	font-size: var(--font-md);
+	font-weight: 900;
+}
+
+@mixin header-4 {
+	@include header;
+	font-size: var(--font-sm);
+	font-weight: 900;
+}
+
+@mixin header-sub {
+	@include header;
+	font-size: var(--font-xl);
+	font-weight: 500;
+}
+
+@mixin header-sub-2 {
+	@include header;
+	font-size: var(--font-xl);
+	font-weight: 500;
+}
+
+@mixin text-gradient() {
+	background: -webkit-linear-gradient(45deg, $color-primary, $color-secondary);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}

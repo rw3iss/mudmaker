@@ -1,0 +1,56 @@
+<div view id="join" class="pad-view">
+
+    <div class="content">
+
+        <div class="center">
+
+            <form flex="column" [formGroup]="formGroup">
+
+                <input autocomplete="email"
+                       placeholder="Email"
+                       formControlName="email"
+                       type="email"/>
+
+                <input placeholder="Password"
+                       formControlName="password"
+                       type="password"/>
+
+                <input placeholder="Confirm Password"
+                       formControlName="confirmPassword"
+                       type="password"/>
+
+                <input type="checkbox" class="agree mat-h4 text-grey"/>I agree to the Terms of Service and Privacy
+                Policy
+
+                <button (click)="onSubmit()"
+                        [disabled]="!isValid()"
+                        class="rounded space-lg"
+                        color="primary"
+                        mat-flat-button>Continue
+                </button>
+
+                <div *ngIf="error != ''" class="error space-sm" color="warn">
+                    {{error}}
+                </div>
+
+            </form>
+
+            <div class="row login text-grey text-sm">
+                Have an account?
+                <button class="link-primary rounded"
+                        routerLink="/login">Login
+                </button>
+            </div>
+
+            <div class="mat-h4 legal">
+
+                <a class="link-light-grey"
+                   href="#">Legal Stuff</a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

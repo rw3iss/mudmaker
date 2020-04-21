@@ -1,0 +1,3 @@
+[submodule "modules/rbac"]
+	path = modules/rbac
+	url = git@github.com:mateothegreat/template-rbac.git

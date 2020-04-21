@@ -1,0 +1,188 @@
+@import "mixins";
+
+.center {
+	text-align: center;
+}
+
+.fixed-page {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	min-height: 100%;
+	min-width: 100%;
+}
+
+// default padding for all pages
+.pad-view {
+	padding: var(--pad-md);
+}
+
+.pad-page {
+	padding: 0 var(--pad-page) var(--pad-page);
+}
+
+.pad-xs {
+	padding: var(--pad-xs) 0;
+}
+
+.pad-sm {
+	padding: var(--pad-sm) 0;
+}
+
+.pad-md {
+	padding: var(--pad-md) 0;
+}
+
+.pad-lg {
+	padding: var(--pad-lg) 0;
+}
+
+// Margin (external)
+
+.space-xs {
+	margin: var(--pad-xs) 0;
+}
+
+.space-sm {
+	margin: var(--pad-sm) 0;
+}
+
+.space-md {
+	display: block;
+	margin: var(--pad-md) 0;
+}
+
+.space-lg {
+	margin: var(--pad-lg) 0;
+}
+
+// margin left only
+
+.space-xs-l {
+	margin-left: var(--pad-xs);
+}
+
+.space-sm-l {
+	margin-left: var(--pad-sm);
+}
+
+.space-md-l {
+	display: block;
+	margin-left: var(--pad-md);
+}
+
+// margin right only
+
+.space-lg-l {
+	margin-left: var(--pad-lg);
+}
+
+.space-xs-r {
+	margin-right: var(--pad-xs);
+}
+
+.space-sm-r {
+	margin-right: var(--pad-sm);
+}
+
+.space-md-r {
+	display: block;
+	margin-right: var(--pad-md);
+}
+
+.space-lg-r {
+	margin-right: var(--pad-lg);
+}
+
+*[flex] {
+	display: flex;
+
+	&.center-both {
+		align-items: center;
+		justify-content: center;
+	}
+}
+
+*[flexfill] {
+	display: flex;
+	flex: 1 0 100%;
+
+	&.center {
+		align-items: center;
+		justify-content: center;
+	}
+}
+
+*[flex="row"] {
+	flex-direction: row;
+
+	&.center {
+		justify-content: center;
+	}
+
+	&.center-cross {
+		align-items: center;
+	}
+}
+
+*[flex="column"] {
+	display: flex;
+	flex-direction: column;
+
+	&.center {
+		justify-content: center;
+	}
+
+	&.fill {
+		flex: 1 0 100%;
+		height: 100%;
+	}
+
+	&.center-cross {
+		align-items: center;
+	}
+
+	&.pad-xs {
+		padding: 0 var(--pad-xs);
+	}
+
+	&.pad-sm {
+		padding: 0 var(--pad-sm);
+	}
+
+	&.pad-md {
+		padding: 0 var(--pad-md);
+	}
+
+	&.pad-lg {
+		padding: 0 var(--pad-lg);
+	}
+}
+
+*[flex="golden-columns"] {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+
+	.col {
+		flex: 1;
+
+		&.col-larger {
+			flex: 1.618;
+		}
+
+		&.pad {
+			padding: var(--pad-col);
+		}
+	}
+
+	&.center {
+		justify-content: center;
+	}
+
+	&.center-cross {
+		align-items: center;
+	}
+}
