@@ -14,15 +14,16 @@ body .navbar .navbar-brand { font-family: "Benegraphic"; font-size: 2.1em; }
 .page-header h1 { font-family: "Benegraphic"; font-size: 7.2em; text-shadow: 2px 2px 15px #001; }
 
 .panel { display: block; margin-bottom: 0px; background: #535663; overflow: hidden; }
-.panel .title { display: block; width: 100%; color: #113; text-shadow: inset -1px -1px 1px #fff; height: 26px; padding: 4px 5px 5px 5px; font-weight: bold;
-background: #aeb5bf; /* Old browsers */
-background: -moz-linear-gradient(top, #aeb5bf 0%, #828c95 36%, #576370 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#aeb5bf), color-stop(36%,#828c95), color-stop(100%,#576370)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, #aeb5bf 0%,#828c95 36%,#576370 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #aeb5bf 0%,#828c95 36%,#576370 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, #aeb5bf 0%,#828c95 36%,#576370 100%); /* IE10+ */
-background: linear-gradient(to bottom, #aeb5bf 0%,#828c95 36%,#576370 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aeb5bf', endColorstr='#576370',GradientType=0 ); /* IE6-9 */
+.panel .title { display: block;
+    width: 100%; color: #113; text-shadow: inset -1px -1px 1px #fff; height: 26px; padding: 4px 5px 5px 5px; font-weight: bold;
+    background: #aeb5bf; /* Old browsers */
+    background: -moz-linear-gradient(top, #aeb5bf 0%, #828c95 36%, #576370 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#aeb5bf), color-stop(36%,#828c95), color-stop(100%,#576370)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #aeb5bf 0%,#828c95 36%,#576370 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #aeb5bf 0%,#828c95 36%,#576370 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #aeb5bf 0%,#828c95 36%,#576370 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #aeb5bf 0%,#828c95 36%,#576370 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aeb5bf', endColorstr='#576370',GradientType=0 ); /* IE6-9 */
 }
 
 #home { margin-top: 80px; }
@@ -36,9 +37,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aeb5bf', end
 
 #status-update { display: block; opacity: 0; position: absolute; z-index: 10001; bottom: 20px; right: 20px; background: #9C8B5A; color: #fff; font-weight: bold; padding: 2px 7px; }
 
+
 #editor-options { display: block; cursor: pointer; position: absolute; top:60px; right: 20px; width: auto; height: auto; overflow: visible; z-index: 99; background: #88a; }
 #editor-options .dropdown-toggle { padding: 5px; }
 #editor-options .dropdown-menu { left: auto; right: -2px; }
+
 
 #area-editor #area-info { display: block; position: absolute; z-index: 10; top: 110px; right: 10px; text-align: right; height: 25px; width: 200px; color: white; }
 #area-editor #area-info { padding: 2px;}
@@ -46,12 +49,18 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aeb5bf', end
 #area-editor #area-info .read-label { display: block; float: right; margin-left: 5px; }
 
 
+
+
+
+
 #rooms-panel { position: absolute; z-index: 2; top: 50px; left: 0px; min-width: 320px; height: 100%; border-right: 2px solid #aaa; }
+#rooms-panel tr.selected,
 #rooms-panel tr.selected td { background: #a84 !important; }
 #rooms-panel tr:hover { cursor: pointer; }
-#rooms-panel tr .roomId { }
 #rooms-panel tr .roomShort { max-height: 1em; overflow: hidden; }
 #rooms-panel tr .roomLong { max-height: 100px; overflow: hidden; display: block; max-width: 100%; }
+
+
 
 
 #room-properties { position: absolute; z-index: 10; bottom: 0px; left: 320px; height: 290px; min-height: 100px; width: 100%; border-top: 2px solid #aaa; }

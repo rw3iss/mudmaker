@@ -1,5 +1,5 @@
 <div id="area-editor" (window:resize)="onResize($event)">
-    
+
     <div class="modal" style="display: block;" id="new-area-options" *ngIf="!area" >
         <div class="modal-dialog">
             <div class="modal-content">
@@ -39,11 +39,11 @@
             <div class="read-label"><span>{{ area.name }}</span></div>
             <input ng-bind="area.name" ng-model="area.name" (blur)="areaNameChanged(this)" class="hidden-input" type="text" style="display:none;" />
             <br/><span>{{area.rooms.length}} Rooms</span>
-            <br/><span>Zoom: {{gridZoom}}%</span>
+            <br/><span>Zoom: {{currZoomPerc}}%</span>
         </div>
     </div>
 
-	<div id="rooms-panel" class="panel" *ngIf="editingRoom != null && uiConfig.panels['all']">
+	<div id="options-panel" class="panel" *ngIf="editingRoom != null && uiConfig.panels['all']">
         
         <span class="title" (click)="togglePanel('editor-config')">Editor Config</span>
 
@@ -62,14 +62,16 @@
             <thead>
             <tr *ngIf="area.rooms.length > 0">
                 <th>#</th>
+                <th>x,y</th>
                 <th>Short Description</th>
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let r of area.rooms" (click)="selectRoom(r, $event, false)" ngClass="{true: 'selected',false: ''}[r.selected==true]">
-                <td class="roomId">{{r.id}}</td>
-                <td class="roomShort">{{r.shortDesc}}</td>
-            </tr>
+                <tr *ngFor="let r of area.rooms" (click)="selectRoom(r, $event, false)" ng-class="{true: 'selected',false: 'notselected'}[r.selected]">
+                    <td class="roomId">{{r.id}}</td>
+                    <td class="roomShort">{{r.x}}, {{r.y}} {{r.selected}}</td>
+                    <td class="roomShort">{{r.shortDesc}}</td>
+                </tr>
             </tbody>
         </table>
 
