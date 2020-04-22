@@ -26,6 +26,10 @@ body .navbar .navbar-brand { font-family: "Benegraphic"; font-size: 2.1em; }
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aeb5bf', endColorstr='#576370',GradientType=0 ); /* IE6-9 */
 }
 
+.panel .title:hover { 
+    cursor: pointer;
+}
+
 #home { margin-top: 80px; }
 
 .modal-title {font-size: 1.5em;  font-weight: 600;}
@@ -49,13 +53,10 @@ body .navbar .navbar-brand { font-family: "Benegraphic"; font-size: 2.1em; }
 #area-editor #area-info .read-label { display: block; float: right; margin-left: 5px; }
 
 
-
-
-
-
-#rooms-panel { position: absolute; z-index: 2; top: 50px; left: 0px; min-width: 320px; height: 100%; border-right: 2px solid #aaa; }
+#rooms-panel { position: absolute; z-index: 2; top: 50px; left: 0px; min-width: 320px }
 #rooms-panel tr.selected,
-#rooms-panel tr.selected td { background: #a84 !important; }
+#rooms-panel tr td.selected { background: #a84 !important; }
+#rooms-panel tr td.notselected { background: red !important; }
 #rooms-panel tr:hover { cursor: pointer; }
 #rooms-panel tr .roomShort { max-height: 1em; overflow: hidden; }
 #rooms-panel tr .roomLong { max-height: 100px; overflow: hidden; display: block; max-width: 100%; }

@@ -68,9 +68,9 @@
             </thead>
             <tbody>
                 <tr *ngFor="let r of area.rooms" (click)="selectRoom(r, $event, false)" ng-class="{true: 'selected',false: 'notselected'}[r.selected]">
-                    <td class="roomId">{{r.id}}</td>
-                    <td class="roomShort">{{r.x}}, {{r.y}} {{r.selected}}</td>
-                    <td class="roomShort">{{r.shortDesc}}</td>
+                    <td ng-class="{true: 'selected',false: 'notselected'}[r.selected]">{{r.id}}</td>
+                    <td ng-class="{true: 'selected',false: 'notselected'}[r.selected]">{{r.x}}, {{r.y}} {{r.selected}}</td>
+                    <td ng-class="{true: 'selected',false: 'notselected'}[r.selected]">{{r.shortDesc}}</td>
                 </tr>
             </tbody>
         </table>

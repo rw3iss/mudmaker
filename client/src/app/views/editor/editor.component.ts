@@ -14,6 +14,26 @@ function wh() {
     return document.body.clientHeight;
 }
 
+function mousePos(event) {
+    var totalOffsetX = 0;
+    var totalOffsetY = 0;
+    var canvasX = 0;
+    var canvasY = 0;
+    var currentElement = event.target;
+
+    do {
+        totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+        totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+    }
+    while(currentElement = currentElement.offsetParent)
+
+    canvasX = event.pageX - totalOffsetX;
+    canvasY = event.pageY - totalOffsetY;
+
+    return {x: canvasX, y: canvasY};
+}
+
+
 @Component({
 	templateUrl: './editor.component.html',
 	styleUrls: ['./editor.component.scss']
@@ -38,8 +58,13 @@ export class EditorComponent implements OnInit {
     public zoomIncr = 10;
     public currZoomPerc = 100;
 
-    public draggingCanvas: boolean;
-    public dragStartEvent: MouseEvent = null;
+    public isDraggingItem: boolean;
+    public itemDragStartEvent: MouseEvent = null;
+    public draggingItem: any;
+
+    public isDraggingCanvas: boolean;
+    public canvasDragStartEvent: MouseEvent = null;
+
     public gridOffsetY = 0;
     public gridOffsetX = 0;
     public gridTempOffsetY = 0; // while dragging
@@ -86,10 +111,21 @@ export class EditorComponent implements OnInit {
         this.uiConfig.panels[panel] = !this.uiConfig.panels[panel];
     }
 
-    public dragStart(event) {
-        this.draggingCanvas = true;
+    public canvasDragStart(event) {
+        this.isDraggingCanvas = true;
         console.log('dragstart', event);
-        this.dragStartEvent = event;
+        this.canvasDragStartEvent = event;
+    }
+
+    public itemDragStart(event) {
+        let { x, y } = mousePos(event);
+        var gridPt = this.findGridPoint(x, y);
+        var existingRoom = this.roomAtClick(gridPt.x, gridPt.y);
+        if (existingRoom) {
+            this.isDraggingItem = true;
+            this.itemDragStartEvent = event;
+            this.draggingItem = existingRoom;
+        }
     }
 
     public initEditor() {
@@ -101,15 +137,15 @@ export class EditorComponent implements OnInit {
 		this.canvas.addEventListener('mousedown', (event: any) => {
             console.log('mousedown', event.which);
 
+            if (event.which == 1) {//} && event.shiftKey) {
+                console.log("LEFT DRAG");
+                this.itemDragStart(event);
+            }
+
             if (event.which == 3) {//} && event.shiftKey) {
                 console.log("RIGHT DRAG");
-                this.dragStart(event);
+                this.canvasDragStart(event);
             }
-        });
-
-
-		this.canvas.addEventListener('ondragstart', (event: any) => {
-            console.log('dragstart', event.which);
         });
 
         // this.canvas.addEventListener('mousedown', function(e) { 
@@ -122,49 +158,28 @@ export class EditorComponent implements OnInit {
 			if(self.area == null)
 				return;
 
-		    if(event.which == 3 && this.draggingCanvas) {
+            if(this.isDraggingItem && event.which == 1) {
                 //stop drag?
                 console.log('right', event);
-		    	self.dragEnd(event);
+                self.itemDragEnd(event);
+                return;
+            } 
+
+		    if(this.isDraggingCanvas && event.which == 3) {
+                //stop drag?
+                console.log('right', event);
+		    	self.canvasDragEnd(event);
 		    	return;
             } 
 
-			var totalOffsetX = 0;
-		    var totalOffsetY = 0;
-		    var canvasX = 0;
-		    var canvasY = 0;
-		    var currentElement = event.target;
-
-		    do {
-		        totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
-		        totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
-		    }
-		    while(currentElement = currentElement.offsetParent)
-
-		    canvasX = event.pageX - totalOffsetX;
-		    canvasY = event.pageY - totalOffsetY;
+			let { x, y } = mousePos(event);
             
-            self.handleCanvasClick(canvasX, canvasY, event);
+            self.handleCanvasClick(x, y, event);
         });
         
         this.canvas.addEventListener('mousemove', (event: any) => {
-            
-			var totalOffsetX = 0;
-		    var totalOffsetY = 0;
-		    var canvasX = 0;
-		    var canvasY = 0;
-		    var currentElement = event.target;
-
-		    do {
-		        totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
-		        totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
-		    }
-		    while(currentElement = currentElement.offsetParent)
-
-		    canvasX = event.pageX - totalOffsetX;
-		    canvasY = event.pageY - totalOffsetY;
-
-            this.handleCanvasMouseMove(canvasX, canvasY, event);
+            let { x, y } = mousePos(event);
+            this.handleCanvasMouseMove(x, y, event);
         })
 
 		this.canvas.addEventListener('wheel', (event: any) => {
@@ -178,27 +193,6 @@ export class EditorComponent implements OnInit {
         });
         
         this.clearCanvas();
-        this.renderAll();
-    }
-
-    public zoomIn() {
-        if (this.currZoomPerc >= 200)
-            return;
-        this.currZoomPerc += this.zoomIncr;
-        
-        this.renderAll();
-    }
-
-    public zoomOut() {
-        if (this.currZoomPerc <= 50)
-            return;
-        this.currZoomPerc -= this.zoomIncr;
-        this.renderAll();
-    }
-
-    public onResize($event) {
-        this.canvas.width = ww();
-        this.canvas.height = wh();
         this.renderAll();
     }
 
@@ -226,20 +220,43 @@ export class EditorComponent implements OnInit {
     }
 
     public handleCanvasMouseMove = (x, y, event) => {
-        if (this.draggingCanvas) {
+        if (this.isDraggingItem) {
+            this.moveItem(event, this.draggingItem);
+        } else if (this.isDraggingCanvas) {
             this.moveCanvas(event);
         } else {
-            console.log('move', x, y );//event.clientX, event.clientY);
-            let gridPt = this.findGridPoint(x, y);//event.clientX-this.gridOffsetX, event.clientY-this.gridOffsetY);
+            let gridPt = this.findGridPoint(x, y);
             this.hoverGridPt = gridPt;
             this.renderAll();
         }
     }
 
+    public moveItem(event, item) {
+        
+        let { x, y } = mousePos(event);
+            
+        // console.log("moveItem", this.itemDragStartEvent.x, this.itemDragStartEvent.y, event.x, event.y);
+        // var gridSize = this.baseGridSize * (this.currZoomPerc/100)
+
+        // let diffX = this.itemDragStartEvent.clientX - event.clientX;
+        // let diffY = this.itemDragStartEvent.clientY - event.clientY;
+
+        // let newX = (item.x*gridSize) - diffX;
+        // let newY = (item.y*gridSize) - diffY;
+
+        // assign new grid point:
+        let pt = this.findGridPoint(x, y);
+        console.log('change item', item.x, item.y, x, y)
+        item.x = pt.x;
+        item.y = pt.y;
+
+        this.renderAll();
+    }
+
     public moveCanvas(event) {
         console.log("moveCanvas", event);
-        let diffX = this.dragStartEvent.clientX - event.clientX;
-        let diffY = this.dragStartEvent.clientY - event.clientY;
+        let diffX = this.canvasDragStartEvent.clientX - event.clientX;
+        let diffY = this.canvasDragStartEvent.clientY - event.clientY;
         this.gridTempOffsetX = diffX;
         this.gridTempOffsetY = diffY;
         this.renderAll();
@@ -250,8 +267,6 @@ export class EditorComponent implements OnInit {
 
         let offsetX = this.gridOffsetX + this.gridTempOffsetX;
         let offsetY = this.gridOffsetY + this.gridTempOffsetY;
-
-        console.log('offset', offsetX, offsetY);
 
         return { 
             x: Math.floor((x+offsetX) / gridSize), 
@@ -279,6 +294,27 @@ export class EditorComponent implements OnInit {
         return null;
     }
 
+    public zoomIn() {
+        if (this.currZoomPerc >= 200)
+            return;
+        this.currZoomPerc += this.zoomIncr;
+        
+        this.renderAll();
+    }
+
+    public zoomOut() {
+        if (this.currZoomPerc <= 50)
+            return;
+        this.currZoomPerc -= this.zoomIncr;
+        this.renderAll();
+    }
+
+    public onResize($event) {
+        this.canvas.width = ww();
+        this.canvas.height = wh();
+        this.renderAll();
+    }
+
     public clearCanvas = () => {
         let ctx = this.canvas.getContext('2d');
         ctx.save();
@@ -287,18 +323,41 @@ export class EditorComponent implements OnInit {
         ctx.restore();
     }
 
-	public dragEnd = (event) => {
+	public canvasDragEnd = (event) => {
         
         // add total drag to new start position/offset
-        let diffX = this.dragStartEvent.clientX - event.clientX;
-        let diffY = this.dragStartEvent.clientY - event.clientY;
+        let diffX = this.canvasDragStartEvent.clientX - event.clientX;
+        let diffY = this.canvasDragStartEvent.clientY - event.clientY;
         this.gridOffsetX += this.gridTempOffsetX;
         this.gridOffsetY += this.gridTempOffsetY;
         this.gridTempOffsetX = 0;
         this.gridTempOffsetY = 0;
 
-        this.dragStartEvent = null;
-        this.draggingCanvas = false;
+        this.canvasDragStartEvent = null;
+        this.isDraggingCanvas = false;
+
+        //fix all rooms to grid:
+        // for(var i in this.area.rooms) {
+        //     var r: Room = this.area.rooms[i];
+
+        //     var gridCoords = this.findGridPoint(r.x, r.y);
+        //     r.x = gridCoords.x;
+        //     r.y = gridCoords.y;
+        // }
+                
+        this.renderAll();
+    }
+
+	public itemDragEnd = (event) => {
+        
+        // add total drag to new start position/offset
+        let diffX = this.itemDragStartEvent.clientX - event.clientX;
+        let diffY = this.itemDragStartEvent.clientY - event.clientY;
+
+        //move item to new location
+
+        this.itemDragStartEvent = null;
+        this.isDraggingItem = false;
 
         //fix all rooms to grid:
         // for(var i in this.area.rooms) {
@@ -400,6 +459,7 @@ export class EditorComponent implements OnInit {
         let offsetX = this.gridOffsetX + this.gridTempOffsetX;
         let offsetY = this.gridOffsetY + this.gridTempOffsetY;
 
+        // Background Grid
         let drawGrid = true;
         if (drawGrid) {
             let cols = Math.ceil(this.canvas.width/gridSize);
@@ -429,8 +489,8 @@ export class EditorComponent implements OnInit {
             // }
         }
 
-        // draw hover border
-        if (!this.draggingCanvas) {
+        // Hover Selector / Cursor
+        if (!this.isDraggingCanvas && !this.isDraggingItem) {
             if (this.hoverGridPt) {
                 let x = (this.hoverGridPt.x * gridSize) - offsetX;
                 let y = (this.hoverGridPt.y * gridSize) - offsetY;
@@ -439,6 +499,7 @@ export class EditorComponent implements OnInit {
             }
         }
 
+        // Rooms
         for(let i in this.area.rooms) {
             let r =  this.area.rooms[i];
 
