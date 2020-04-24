@@ -32,6 +32,9 @@ let ColorScheme = {
     HIGHLIGHT_BORDER_COLOR: "#333"
 }
 
+const enum MouseMode {
+    Insert, Drag, Delete, None
+}
 
 @Component({
 	templateUrl: './editor.component.html',
@@ -66,6 +69,7 @@ export class EditorComponent implements OnInit {
 
     public mouseDownEvent: MouseEvent = null;
     public mouseDownPos = null;
+    public mouseMode: MouseMode = MouseMode.None;
 
     public gridOffsetY = 0;
     public gridOffsetX = 0;
@@ -102,6 +106,7 @@ export class EditorComponent implements OnInit {
 
 	async loadData() {
         const self = this;
+        
 		console.log('loading dashboard...');
 
 		const user = this.authService.getCurrentUser().subscribe(u => {
@@ -131,80 +136,102 @@ export class EditorComponent implements OnInit {
         this.canvasDragStartEvent = event;
     }
 
-    public itemDragStart(event) {
-        let { x, y } = CanvasUtils.mousePos(event);
-        var gridPt = this.findGridPoint(x, y);
-        var existingRoom = this.roomAtClick(gridPt.x, gridPt.y);
-        if (existingRoom) {
-            this.isDraggingItem = true;
-            this.itemDragStartEvent = event;
-            this.draggingItem = existingRoom;
-        }
+    public itemDragStart(item, gridPt, event) {
+        this.isDraggingItem = true;
+        this.itemDragStartEvent = event;
+        this.draggingItem = item;
+        console.log('DRAG START', item);
     }
 
     public initEditor() {
         const self = this;
 
         this.canvas = (document.getElementById('area-canvas') as HTMLCanvasElement)
-        this.canvas.width = CanvasUtils.ww(); //document.body.clientWidth;
-        this.canvas.height = CanvasUtils.wh(); //document.body.clientHeight;
+        this.canvas.width = CanvasUtils.ww();
+        this.canvas.height = CanvasUtils.wh();
        
-        document.body.onmousedown = function(event) { console.log('MOUSE DOWN', event.which)};
-        
         this.canvas.addEventListener('mousedown', (event: any) => {
             console.log('mousedown', event.which);
             this.mouseDownEvent = event;
-            
             let { x, y } = CanvasUtils.mousePos(event);
-
             this.mouseDownPos = this.findGridPoint(x, y);
 
-            if (event.which == 1) {//} && event.shiftKey) {
-                console.log("LEFT DRAG");
-                this.itemDragStart(event);
-            }
+            // LEFT-CLICK modify rooms
+            if (event.which == 1) {
+                
+                if (event.ctrlKey) {
+                    this.mouseMode = MouseMode.Delete;
+                } else {
+                    let existingRoom = this.roomAtGridPt(this.mouseDownPos.x, this.mouseDownPos.y);
+                    if (existingRoom) {
+                        this.mouseMode = MouseMode.Drag;
+                        this.itemDragStart(existingRoom, this.mouseDownPos, event);
+                    } else {
+                        this.mouseMode = MouseMode.Insert;
+                    } 
+                }
 
-            if (event.which == 3) {//} && event.shiftKey) {
-                console.log("RIGHT DRAG");
+            }
+            // RIGHT-CLICK drag canvas
+            else if (event.which == 3) {
+
                 this.canvasDragStart(event);
+                
             }
         });
 
-        // this.canvas.addEventListener('mousedown', function(e) { 
-        //     console.log('mouse down', e)
-        // });
-
-		//Clickable center area/room gui
 		this.canvas.addEventListener('mouseup', (event: any) => {
+
+            this.mouseMode = MouseMode.None;
 
             let { x, y } = CanvasUtils.mousePos(event);
             let mouseUpPos = this.findGridPoint(x, y);
 
-			if(self.area == null)
-				return;
-
-            if(this.isDraggingItem && event.which == 1) {
-                //stop drag?
+            if(event.which == 1 && this.isDraggingItem) {
                 self.itemDragEnd(event);
             } 
 
-		    if(this.isDraggingCanvas && event.which == 3) {
-                //stop drag?
-                console.log('right', event);
+		    if(event.which == 3 && this.isDraggingCanvas) {
 		    	self.canvasDragEnd(event);
-		    	return;
             } 
             
             // mousewheel up, or regular click up
             if (event.which == 2 ||
-                (this.mouseDownPos.x == mouseUpPos.x && this.mouseDownPos.y == mouseUpPos.y) ) {
+                (event.which == 1 && (this.mouseDownPos.x == mouseUpPos.x && this.mouseDownPos.y == mouseUpPos.y)) ) {
+                    console.log('click', this.mouseDownPos, mouseUpPos)
                 self.handleCanvasClick(mouseUpPos.x, mouseUpPos.y, event);
             }
+
+            this.mouseDownEvent = null;
         });
         
         this.canvas.addEventListener('mousemove', (event: any) => {
+
             let { x, y } = CanvasUtils.mousePos(event);
-            this.handleCanvasMouseMove(x, y, event);
+            let gridPt = this.findGridPoint(x, y);
+            let existingRoom = this.roomAtGridPt(gridPt.x, gridPt.y);
+
+            // Left click drag
+            if (this.mouseMode == MouseMode.Insert) {
+                console.log('INSERT');
+                if (!existingRoom)
+                    this.addRoom(gridPt.x, gridPt.y, event);
+            } else if (this.mouseMode == MouseMode.Drag) {
+                this.moveItem(event, this.draggingItem);
+            } else if (this.mouseMode == MouseMode.Delete) {
+                if (existingRoom)
+                    this.removeRoom(existingRoom);
+            }
+
+            if (this.isDraggingCanvas) {
+                this.moveCanvas(event);
+                //this.handleCanvasMouseMove(x, y, event);
+            } else {
+                // just show normal selection
+                this.hoverGridPt = gridPt;
+                this.renderAll();
+            }
+            
         })
 
 		this.canvas.addEventListener('wheel', (event: any) => {
@@ -223,9 +250,7 @@ export class EditorComponent implements OnInit {
 
     public handleCanvasClick(x, y, event) {
         //find the closest grid point to the click:
-        var existingRoom = this.roomAtClick(x, y);
-
-        console.log('click', event.ctrlKey, event.which);
+        var existingRoom = this.roomAtGridPt(x, y);
 
         if(event.ctrlKey == true || event.which == 2) {
             if (existingRoom != null) {
@@ -241,34 +266,10 @@ export class EditorComponent implements OnInit {
         }
     }
 
-    public handleCanvasMouseMove = (x, y, event) => {
-        if (this.isDraggingItem) {
-            this.moveItem(event, this.draggingItem);
-        } else if (this.isDraggingCanvas) {
-            this.moveCanvas(event);
-        } else {
-            let gridPt = this.findGridPoint(x, y);
-            this.hoverGridPt = gridPt;
-            this.renderAll();
-        }
-    }
-
     public moveItem(event, item) {
-        
         let { x, y } = CanvasUtils.mousePos(event);
-            
-        // console.log("moveItem", this.itemDragStartEvent.x, this.itemDragStartEvent.y, event.x, event.y);
-        // var gridSize = this.baseGridSize * (this.currZoomPerc/100)
-
-        // let diffX = this.itemDragStartEvent.clientX - event.clientX;
-        // let diffY = this.itemDragStartEvent.clientY - event.clientY;
-
-        // let newX = (item.x*gridSize) - diffX;
-        // let newY = (item.y*gridSize) - diffY;
-
-        // assign new grid point:
         let pt = this.findGridPoint(x, y);
-        console.log('change item', item.x, item.y, x, y)
+        console.log('moveItem', x, y, pt, item);
         item.x = pt.x;
         item.y = pt.y;
 
@@ -276,7 +277,6 @@ export class EditorComponent implements OnInit {
     }
 
     public moveCanvas(event) {
-        console.log("moveCanvas", event);
         let diffX = this.canvasDragStartEvent.clientX - event.clientX;
         let diffY = this.canvasDragStartEvent.clientY - event.clientY;
         this.gridTempOffsetX = diffX;
@@ -296,7 +296,7 @@ export class EditorComponent implements OnInit {
         };
     }
     
-    public roomAtClick(x, y) {
+    public roomAtGridPt(x, y) {
         
         for(var i in this.area.rooms) {
             var r =  this.area.rooms[i];
@@ -432,14 +432,14 @@ export class EditorComponent implements OnInit {
         }
     }
 
-    public addRoom = (x, y, event) => {	
+    public addRoom = (gridX, gridY, event) => {	
         //this.clearSelection();
-        console.log('addRoom', x, y)
+        console.log('addRoom', gridX, gridY)
 
         //find the closest grid point to the click:
         var room = new Room();
-        room.x = x;
-        room.y = y;
+        room.x = gridX;
+        room.y = gridY;
         room.id = (this.lastRoomID++).toString();
 
         room.exits 
