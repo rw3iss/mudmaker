@@ -1,36 +1,35 @@
-import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
+import {Component, OnInit, ChangeDetectorRef, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import {Router}            from '@angular/router';
 import {AuthService}       from '../../auth/auth.service';
 import { Area } from 'src/app/lib/models/Area';
 import { Room } from 'src/app/lib/models/Room';
 import { User } from 'src/app/lib/models/User';
 import RoomView from './RoomView';
-import CanvasUtils from './CanvasUtils'
+import CanvasUtils from './CanvasUtils';
+import { jqxWindowComponent } from 'jqwidgets-ng/jqxwindow';
 
-function ww() {
-    return document.body.clientWidth;
-}
-function wh() {
-    return document.body.clientHeight;
-}
 
-function mousePos(event) {
-    var totalOffsetX = 0;
-    var totalOffsetY = 0;
-    var canvasX = 0;
-    var canvasY = 0;
-    var currentElement = event.target;
+// const BACKGROUND_COLOR = "#6a6a7a";
+// const GRID_COLOR = "30,30,30";
+// const ROOM_COLOR = "#112";
+// const ROOM_SELECTED_COLOR = "#B0DAFF";
 
-    do {
-        totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
-        totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
-    }
-    while(currentElement = currentElement.offsetParent)
+// let ColorScheme = {
+//     BACKGROUND_COLOR: "#f4eef9",
+//     GRID_COLOR: "#a3bff0",
+//     ROOM_COLOR: "#a3bff0",
+//     ROOM_SELECTED_COLOR: "#3f8e47",
+//     HIGHLIGHT_COLOR: "#ffffff",
+//     HIGHLIGHT_BORDER_COLOR: "#a3bff0"
+// }
 
-    canvasX = event.pageX - totalOffsetX;
-    canvasY = event.pageY - totalOffsetY;
-
-    return {x: canvasX, y: canvasY};
+let ColorScheme = {
+    BACKGROUND_COLOR: "#6a6a7a",
+    GRID_COLOR: "#333",
+    ROOM_COLOR: "#112",
+    ROOM_SELECTED_COLOR: "#B0DAFF",
+    HIGHLIGHT_COLOR: "#7a7a8a",
+    HIGHLIGHT_BORDER_COLOR: "#333"
 }
 
 
@@ -65,6 +64,9 @@ export class EditorComponent implements OnInit {
     public isDraggingCanvas: boolean;
     public canvasDragStartEvent: MouseEvent = null;
 
+    public mouseDownEvent: MouseEvent = null;
+    public mouseDownPos = null;
+
     public gridOffsetY = 0;
     public gridOffsetX = 0;
     public gridTempOffsetY = 0; // while dragging
@@ -72,6 +74,9 @@ export class EditorComponent implements OnInit {
 
     public lastRoomID = 0;
 
+    @ViewChild('jqxWidget', { static: false }) jqxWidget: ElementRef;
+    @ViewChild('windowReference', { static: false }) window: jqxWindowComponent;
+    
     public uiConfig = {
         panels: {
             all: true,
@@ -85,7 +90,15 @@ export class EditorComponent implements OnInit {
 
 	ngOnInit() {
 		this.loadData();
-	}
+    }
+    
+    ngAfterViewInit = () => {
+        let offsetLeft = this.jqxWidget.nativeElement.offsetLeft;
+        let offsetTop = this.jqxWidget.nativeElement.offsetTop;
+        this.window.position({ x: offsetLeft + 50, y: offsetTop + 50 });
+        this.window.focus();
+        this.window.open();
+    }
 
 	async loadData() {
         const self = this;
@@ -107,8 +120,9 @@ export class EditorComponent implements OnInit {
     }
     
     public togglePanel(panel) {
-        console.log('toggle panel');
+        console.log('toggle panel', panel);
         this.uiConfig.panels[panel] = !this.uiConfig.panels[panel];
+        this.changeDetector.detectChanges();
     }
 
     public canvasDragStart(event) {
@@ -118,7 +132,7 @@ export class EditorComponent implements OnInit {
     }
 
     public itemDragStart(event) {
-        let { x, y } = mousePos(event);
+        let { x, y } = CanvasUtils.mousePos(event);
         var gridPt = this.findGridPoint(x, y);
         var existingRoom = this.roomAtClick(gridPt.x, gridPt.y);
         if (existingRoom) {
@@ -130,12 +144,20 @@ export class EditorComponent implements OnInit {
 
     public initEditor() {
         const self = this;
-        this.canvas = (document.getElementById('area-canvas') as HTMLCanvasElement)
-        this.canvas.width = ww(); //document.body.clientWidth;
-        this.canvas.height = wh(); //document.body.clientHeight;
 
-		this.canvas.addEventListener('mousedown', (event: any) => {
+        this.canvas = (document.getElementById('area-canvas') as HTMLCanvasElement)
+        this.canvas.width = CanvasUtils.ww(); //document.body.clientWidth;
+        this.canvas.height = CanvasUtils.wh(); //document.body.clientHeight;
+       
+        document.body.onmousedown = function(event) { console.log('MOUSE DOWN', event.which)};
+        
+        this.canvas.addEventListener('mousedown', (event: any) => {
             console.log('mousedown', event.which);
+            this.mouseDownEvent = event;
+            
+            let { x, y } = CanvasUtils.mousePos(event);
+
+            this.mouseDownPos = this.findGridPoint(x, y);
 
             if (event.which == 1) {//} && event.shiftKey) {
                 console.log("LEFT DRAG");
@@ -155,14 +177,15 @@ export class EditorComponent implements OnInit {
 		//Clickable center area/room gui
 		this.canvas.addEventListener('mouseup', (event: any) => {
 
+            let { x, y } = CanvasUtils.mousePos(event);
+            let mouseUpPos = this.findGridPoint(x, y);
+
 			if(self.area == null)
 				return;
 
             if(this.isDraggingItem && event.which == 1) {
                 //stop drag?
-                console.log('right', event);
                 self.itemDragEnd(event);
-                return;
             } 
 
 		    if(this.isDraggingCanvas && event.which == 3) {
@@ -171,14 +194,16 @@ export class EditorComponent implements OnInit {
 		    	self.canvasDragEnd(event);
 		    	return;
             } 
-
-			let { x, y } = mousePos(event);
             
-            self.handleCanvasClick(x, y, event);
+            // mousewheel up, or regular click up
+            if (event.which == 2 ||
+                (this.mouseDownPos.x == mouseUpPos.x && this.mouseDownPos.y == mouseUpPos.y) ) {
+                self.handleCanvasClick(mouseUpPos.x, mouseUpPos.y, event);
+            }
         });
         
         this.canvas.addEventListener('mousemove', (event: any) => {
-            let { x, y } = mousePos(event);
+            let { x, y } = CanvasUtils.mousePos(event);
             this.handleCanvasMouseMove(x, y, event);
         })
 
@@ -198,14 +223,11 @@ export class EditorComponent implements OnInit {
 
     public handleCanvasClick(x, y, event) {
         //find the closest grid point to the click:
-        var gridPt = this.findGridPoint(x, y);
-        console.log('grid pt', x, y, gridPt);
+        var existingRoom = this.roomAtClick(x, y);
 
-        var existingRoom = this.roomAtClick(gridPt.x, gridPt.y);
-        console.log('existing room', existingRoom);
+        console.log('click', event.ctrlKey, event.which);
 
-        if(event.ctrlKey == true) {
-            console.log('CTRL KEY')
+        if(event.ctrlKey == true || event.which == 2) {
             if (existingRoom != null) {
                 this.removeRoom(existingRoom);
             }
@@ -215,7 +237,7 @@ export class EditorComponent implements OnInit {
         if (existingRoom != null) {
             this.selectRoom(existingRoom, event, true);
         } else {
-            this.addRoom(gridPt.x, gridPt.y, event);
+            this.addRoom(x, y, event);
         }
     }
 
@@ -233,7 +255,7 @@ export class EditorComponent implements OnInit {
 
     public moveItem(event, item) {
         
-        let { x, y } = mousePos(event);
+        let { x, y } = CanvasUtils.mousePos(event);
             
         // console.log("moveItem", this.itemDragStartEvent.x, this.itemDragStartEvent.y, event.x, event.y);
         // var gridSize = this.baseGridSize * (this.currZoomPerc/100)
@@ -310,8 +332,8 @@ export class EditorComponent implements OnInit {
     }
 
     public onResize($event) {
-        this.canvas.width = ww();
-        this.canvas.height = wh();
+        this.canvas.width = CanvasUtils.ww();
+        this.canvas.height = CanvasUtils.wh();
         this.renderAll();
     }
 
@@ -420,6 +442,7 @@ export class EditorComponent implements OnInit {
         room.y = y;
         room.id = (this.lastRoomID++).toString();
 
+        room.exits 
         this.area.rooms.push(room);
 
         //select the new room
@@ -453,7 +476,6 @@ export class EditorComponent implements OnInit {
 
         let zoom = (this.currZoomPerc/100);
         let gridSize = this.baseGridSize * zoom;
-        let gridColor = "30,30,30";
         let gridOpacity = .5;
 
         let offsetX = this.gridOffsetX + this.gridTempOffsetX;
@@ -462,6 +484,8 @@ export class EditorComponent implements OnInit {
         // Background Grid
         let drawGrid = true;
         if (drawGrid) {
+            CanvasUtils.drawSquare(ctx, ColorScheme.BACKGROUND_COLOR, 0,0, CanvasUtils.ww(), CanvasUtils.wh());
+
             let cols = Math.ceil(this.canvas.width/gridSize);
             let rows = Math.ceil(this.canvas.height/gridSize);
 
@@ -472,21 +496,12 @@ export class EditorComponent implements OnInit {
            let lineWidth = this.currZoomPerc/100;
 
             for (var i=offsetCols; i<cols+offsetCols; i++) {
-                CanvasUtils.drawLine(ctx, lineWidth, `rgba(${gridColor}, ${gridOpacity})`, i*gridSize - offsetX, 0, i*gridSize - offsetX, this.canvas.height);
-            }
-            for (var i=offsetRows; i<rows+offsetRows; i++) {
-                CanvasUtils.drawLine(ctx, lineWidth, `rgba(${gridColor}, ${gridOpacity})`, 0, i*gridSize - offsetY, this.canvas.width, i*gridSize - offsetY);
+                CanvasUtils.drawLine(ctx, lineWidth, ColorScheme.GRID_COLOR, i*gridSize - offsetX, 0, i*gridSize - offsetX, this.canvas.height);
             }
 
-            // for (var i=0; i<cols; i++) {
-            //     CanvasUtils.drawLine(ctx, "#151515", i*gridSize + offsetX, 0, i*gridSize + offsetX, this.canvas.height);
-            // }
-            // for (var i=-10; i<rows; i++) {
-            //     CanvasUtils.drawLine(ctx, "#151515", 0, i*gridSize -offsetY, this.canvas.width, i*gridSize - offsetY);
-            // }
-            // for (var i=0; i<rows; i++) {
-            //     CanvasUtils.drawLine(ctx, "#151515", 0, i*gridSize + offsetY, this.canvas.width, i*gridSize + offsetY);
-            // }
+            for (var i=offsetRows; i<rows+offsetRows; i++) {
+                CanvasUtils.drawLine(ctx, lineWidth,ColorScheme. GRID_COLOR, 0, i*gridSize - offsetY, this.canvas.width, i*gridSize - offsetY);
+            }
         }
 
         // Hover Selector / Cursor
@@ -494,8 +509,8 @@ export class EditorComponent implements OnInit {
             if (this.hoverGridPt) {
                 let x = (this.hoverGridPt.x * gridSize) - offsetX;
                 let y = (this.hoverGridPt.y * gridSize) - offsetY;
-                CanvasUtils.drawSquare(ctx, "#7a7a7a", x, y, x+gridSize, y+gridSize);
-                CanvasUtils.drawStrokeRect(ctx, "#252515", x, y, x+gridSize, y+gridSize);
+                CanvasUtils.drawSquare(ctx, ColorScheme.HIGHLIGHT_COLOR, x, y, x+gridSize, y+gridSize);
+                CanvasUtils.drawStrokeRect(ctx, ColorScheme.HIGHLIGHT_BORDER_COLOR, x, y, x+gridSize, y+gridSize);
             }
         }
 
@@ -513,18 +528,14 @@ export class EditorComponent implements OnInit {
             if(r.selected == true) {
 
                 // draw at grid point + grid size - half room size
-                CanvasUtils.drawSquare(ctx, "#B0DAFF", cX - (width/2), cY - (width/2),
+                CanvasUtils.drawSquare(ctx, ColorScheme.ROOM_SELECTED_COLOR, cX - (width/2), cY - (width/2),
                     (cX+(width/2)),
                     (cY+(width/2))
-                );
-                CanvasUtils.drawSquare(ctx, "#B0DAFF", cX - (width/2)+1, cY - (width/2)+1,
-                    (cX+(width/2)-2),
-                    (cY+(width/2)-2)
                 );
 
             } else {
                 
-                CanvasUtils.drawSquare(ctx, "#112", cX - (width/2), cY - (width/2),
+                CanvasUtils.drawSquare(ctx, ColorScheme.ROOM_COLOR, cX - (width/2), cY - (width/2),
                     (cX+(width/2)),
                     (cY+(width/2))
                 );

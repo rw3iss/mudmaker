@@ -25,4 +25,31 @@ export default class CanvasUtils {
         ctx.strokeRect(x1, y1, x2-x1, y2-y1);
     }
 
+    static mousePos(event) {
+        var totalOffsetX = 0;
+        var totalOffsetY = 0;
+        var canvasX = 0;
+        var canvasY = 0;
+        var currentElement = event.target;
+
+        do {
+            totalOffsetX += currentElement.offsetLeft - currentElement.scrollLeft;
+            totalOffsetY += currentElement.offsetTop - currentElement.scrollTop;
+        }
+        while(currentElement = currentElement.offsetParent)
+
+        canvasX = event.pageX - totalOffsetX;
+        canvasY = event.pageY - totalOffsetY;
+
+        return { x: canvasX, y: canvasY };
+    }
+
+    static ww() {
+        return window.innerWidth; //document.body.clientWidth;
+    }
+
+    static wh() {
+        return window.innerHeight; //document.body.clientHeight;
+    }
+
 }

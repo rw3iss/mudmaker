@@ -13,10 +13,12 @@ import {AuthService}        from './auth/auth.service';
 import {ToastrModule}       from 'ngx-toastr';
 import {ViewComponent}      from './shared/view/view.component';
 import { HeaderComponent }  from './shared/header/header.component';
+import { PanelComponent }  from './shared/panel/panel.component';
 import { ProfileComponent } from './views/profile/profile.component';
 import { HomeComponent } 	from './views/home/home.component';
 import { HelpComponent } 	from './views/help/help.component';
 import { LocalStorageService } from './lib/services/localstorage.service';
+import { jqxWindowModule } from 'jqwidgets-ng/jqxwindow';
 
 @NgModule({
 	declarations: [
@@ -29,14 +31,16 @@ import { LocalStorageService } from './lib/services/localstorage.service';
 		HeaderComponent,
 		ProfileComponent,
 		HomeComponent,
-		HelpComponent
+		HelpComponent,
+        PanelComponent
 	],
 	imports: [
 		BrowserModule,
 		FormsModule,
 		ReactiveFormsModule,
 		HttpClientModule,
-		AppRoutingModule,
+        AppRoutingModule,
+        jqxWindowModule,
 		ToastrModule.forRoot({
 			timeOut: 5000,
 			positionClass: 'toast-bottom-right',

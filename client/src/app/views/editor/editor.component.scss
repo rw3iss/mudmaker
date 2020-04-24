@@ -1,8 +1,23 @@
 @import "src/styles/mixins";
 
-@font-face { font-family: "Benegraphic"; src: url('/css/benegraphic.ttf'); } 
+#area-editor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+}
 
-body,html { margin: 0px; padding: 0px; overflow: hidden; }
+::ng-deep {
+    .jqx-window {
+        opacity: .8;
+    }
+}
+
+
+body,html { margin: 0px; padding: 0px; overflow: hidden; font-family: "Hasklig"; }
 a, button, img, button:active { outline: 0 !important; }
 ul { margin: 0px; padding: 0px; list-style: none; }
 a:hover { text-decoration: none; }
@@ -10,25 +25,9 @@ a:hover { text-decoration: none; }
 .nav.navbar-right li { display: block; margin-left: 7px; }
 .nav.navbar-right li:last-child { margin-left: 12px; }
 .nav.navbar-right li input { display:block; width: 120px; padding: 3px; height: 25px; margin-top: 12px; }
-body .navbar .navbar-brand { font-family: "Benegraphic"; font-size: 2.1em; }
-.page-header h1 { font-family: "Benegraphic"; font-size: 7.2em; text-shadow: 2px 2px 15px #001; }
+body .navbar .navbar-brand { font-family: "Hasklig"; font-size: 2.1em; }
+.page-header h1 { font-family: "Hasklig"; font-size: 7.2em; text-shadow: 2px 2px 15px #001; }
 
-.panel { display: block; margin-bottom: 0px; background: #535663; overflow: hidden; }
-.panel .title { display: block;
-    width: 100%; color: #113; text-shadow: inset -1px -1px 1px #fff; height: 26px; padding: 4px 5px 5px 5px; font-weight: bold;
-    background: #aeb5bf; /* Old browsers */
-    background: -moz-linear-gradient(top, #aeb5bf 0%, #828c95 36%, #576370 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#aeb5bf), color-stop(36%,#828c95), color-stop(100%,#576370)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top, #aeb5bf 0%,#828c95 36%,#576370 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top, #aeb5bf 0%,#828c95 36%,#576370 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top, #aeb5bf 0%,#828c95 36%,#576370 100%); /* IE10+ */
-    background: linear-gradient(to bottom, #aeb5bf 0%,#828c95 36%,#576370 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aeb5bf', endColorstr='#576370',GradientType=0 ); /* IE6-9 */
-}
-
-.panel .title:hover { 
-    cursor: pointer;
-}
 
 #home { margin-top: 80px; }
 
@@ -51,16 +50,6 @@ body .navbar .navbar-brand { font-family: "Benegraphic"; font-size: 2.1em; }
 #area-editor #area-info { padding: 2px;}
 #area-editor #area-info span { float: right; }
 #area-editor #area-info .read-label { display: block; float: right; margin-left: 5px; }
-
-
-#rooms-panel { position: absolute; z-index: 2; top: 50px; left: 0px; min-width: 320px }
-#rooms-panel tr.selected,
-#rooms-panel tr td.selected { background: #a84 !important; }
-#rooms-panel tr td.notselected { background: red !important; }
-#rooms-panel tr:hover { cursor: pointer; }
-#rooms-panel tr .roomShort { max-height: 1em; overflow: hidden; }
-#rooms-panel tr .roomLong { max-height: 100px; overflow: hidden; display: block; max-width: 100%; }
-
 
 
 

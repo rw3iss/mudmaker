@@ -1,188 +1,197 @@
 @import "mixins";
 
 .center {
-	text-align: center;
+    text-align: center;
 }
 
 .fixed-page {
-	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	min-height: 100%;
-	min-width: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    min-height: 100%;
+    min-width: 100%;
 }
 
 // default padding for all pages
 .pad-view {
-	padding: var(--pad-md);
+    padding: var(--pad-md);
 }
 
 .pad-page {
-	padding: 0 var(--pad-page) var(--pad-page);
+    padding: 0 var(--pad-page) var(--pad-page);
 }
 
 .pad-xs {
-	padding: var(--pad-xs) 0;
+    padding: var(--pad-xs) 0;
 }
 
 .pad-sm {
-	padding: var(--pad-sm) 0;
+    padding: var(--pad-sm) 0;
 }
 
 .pad-md {
-	padding: var(--pad-md) 0;
+    padding: var(--pad-md) 0;
 }
 
 .pad-lg {
-	padding: var(--pad-lg) 0;
+    padding: var(--pad-lg) 0;
 }
 
 // Margin (external)
 
 .space-xs {
-	margin: var(--pad-xs) 0;
+    margin: var(--pad-xs) 0;
 }
 
 .space-sm {
-	margin: var(--pad-sm) 0;
+    margin: var(--pad-sm) 0;
 }
 
 .space-md {
-	display: block;
-	margin: var(--pad-md) 0;
+    display: block;
+    margin: var(--pad-md) 0;
 }
 
 .space-lg {
-	margin: var(--pad-lg) 0;
+    margin: var(--pad-lg) 0;
 }
 
 // margin left only
 
 .space-xs-l {
-	margin-left: var(--pad-xs);
+    margin-left: var(--pad-xs);
 }
 
 .space-sm-l {
-	margin-left: var(--pad-sm);
+    margin-left: var(--pad-sm);
 }
 
 .space-md-l {
-	display: block;
-	margin-left: var(--pad-md);
+    display: block;
+    margin-left: var(--pad-md);
 }
 
 // margin right only
 
 .space-lg-l {
-	margin-left: var(--pad-lg);
+    margin-left: var(--pad-lg);
 }
 
 .space-xs-r {
-	margin-right: var(--pad-xs);
+    margin-right: var(--pad-xs);
 }
 
 .space-sm-r {
-	margin-right: var(--pad-sm);
+    margin-right: var(--pad-sm);
 }
 
 .space-md-r {
-	display: block;
-	margin-right: var(--pad-md);
+    display: block;
+    margin-right: var(--pad-md);
 }
 
 .space-lg-r {
-	margin-right: var(--pad-lg);
-}
-
-*[flex] {
-	display: flex;
-
-	&.center-both {
-		align-items: center;
-		justify-content: center;
-	}
+    margin-right: var(--pad-lg);
 }
 
 *[flexfill] {
-	display: flex;
-	flex: 1 0 100%;
+    display: flex;
+    flex: 1 0 100%;
 
-	&.center {
-		align-items: center;
-		justify-content: center;
-	}
+    &.center {
+        align-items: center;
+        justify-content: center;
+    }
 }
 
-*[flex="row"] {
-	flex-direction: row;
+*[flex] {
+    &[flex~="fill"] {
+        flex: 1;
+    }
 
-	&.center {
-		justify-content: center;
-	}
+    &[flex~="row"] {
+        display: flex;
+        flex-direction: row;
 
-	&.center-cross {
-		align-items: center;
-	}
-}
+        &[flex~="center"],
+        &.center {
+            justify-content: center;
+        }
 
-*[flex="column"] {
-	display: flex;
-	flex-direction: column;
+        &[flex~="center-cross"],
+        &.center-cross {
+            align-items: center;
+        }
+    }
 
-	&.center {
-		justify-content: center;
-	}
+    &[flex~="col"] {
+        display: flex;
+        flex-direction: column;
 
-	&.fill {
-		flex: 1 0 100%;
-		height: 100%;
-	}
+        &[flex~="center"],
+        &.center {
+            justify-content: center;
+        }
 
-	&.center-cross {
-		align-items: center;
-	}
+        &.fill {
+            flex: 1 0 100%;
+            height: 100%;
+        }
 
-	&.pad-xs {
-		padding: 0 var(--pad-xs);
-	}
+        &.center-cross {
+            align-items: center;
+        }
 
-	&.pad-sm {
-		padding: 0 var(--pad-sm);
-	}
+        &.pad-xs {
+            padding: 0 var(--pad-xs);
+        }
 
-	&.pad-md {
-		padding: 0 var(--pad-md);
-	}
+        &.pad-sm {
+            padding: 0 var(--pad-sm);
+        }
 
-	&.pad-lg {
-		padding: 0 var(--pad-lg);
-	}
-}
+        &.pad-md {
+            padding: 0 var(--pad-md);
+        }
 
-*[flex="golden-columns"] {
-	display: flex;
-	flex-direction: row;
-	width: 100%;
+        &.pad-lg {
+            padding: 0 var(--pad-lg);
+        }
+    }
 
-	.col {
-		flex: 1;
+    &[flex~="golden-columns"] {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
 
-		&.col-larger {
-			flex: 1.618;
-		}
+        .col {
+            flex: 1;
 
-		&.pad {
-			padding: var(--pad-col);
-		}
-	}
+            &.col-larger {
+                flex: 1.618;
+            }
 
-	&.center {
-		justify-content: center;
-	}
+            &.pad {
+                padding: var(--pad-col);
+            }
+        }
 
-	&.center-cross {
-		align-items: center;
-	}
+        &[flex~="center"],
+        &.center {
+            justify-content: center;
+        }
+
+        &[flex~="center-cross"],
+        &.center-cross {
+            align-items: center;
+        }
+    }
+
+    &[flex~="center-both"],
+    &.center-both {
+        align-items: center;
+        justify-content: center;
+    }
 }

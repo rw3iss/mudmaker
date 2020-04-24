@@ -12,6 +12,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "~9.1.0-next.2",
+    "@angular/cdk": "^9.1.4",
     "@angular/common": "~9.1.0-next.2",
     "@angular/compiler": "~9.1.0-next.2",
     "@angular/core": "~9.1.0-next.2",
@@ -19,7 +20,10 @@
     "@angular/platform-browser": "~9.1.0-next.2",
     "@angular/platform-browser-dynamic": "~9.1.0-next.2",
     "@angular/router": "~9.1.0-next.2",
+    "angular-split": "^3.0.3",
     "geojson": "^0.5.0",
+    "jqwidgets-ng": "^9.1.4",
+    "lodash": "^4.17.15",
     "ngx-toastr": "^12.0.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.11.1",

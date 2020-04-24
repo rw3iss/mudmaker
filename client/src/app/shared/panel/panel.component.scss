@@ -1,0 +1,56 @@
+@import "src/styles/mixins";
+
+::ng-deep {
+    
+    app-panel { position: absolute; z-index: 2; top: 50px; left: 0px; min-width: 320px;    }
+
+    .panel {
+        display: block; 
+        z-index: 12;
+        margin-bottom: 0px; 
+        overflow: hidden; 
+        
+        .title { 
+            display: block;
+            width: 100%; color: #113; text-shadow: inset -1px -1px 1px #fff; height: 26px; padding: 4px 5px 5px 5px; font-weight: bold;
+            background: #aeb5bf; /* Old browsers */
+            background: -moz-linear-gradient(top, #aeb5bf 0%, #828c95 36%, #576370 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#aeb5bf), color-stop(36%,#828c95), color-stop(100%,#576370)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top, #aeb5bf 0%,#828c95 36%,#576370 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top, #aeb5bf 0%,#828c95 36%,#576370 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top, #aeb5bf 0%,#828c95 36%,#576370 100%); /* IE10+ */
+            background: linear-gradient(to bottom, #aeb5bf 0%,#828c95 36%,#576370 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aeb5bf', endColorstr='#576370',GradientType=0 ); /* IE6-9 */
+
+            &:hover { 
+                cursor: pointer;
+            }
+
+            .content {
+                padding: 0;
+                margin: 0;
+
+                .table {
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        &.closed {
+            //width: 40px;
+
+            .title {
+                //transform: rotateX(90deg);
+            }   
+
+            .content {
+                height: 0;
+                padding: 0;
+                margin: 0;
+
+            }
+        }
+
+    }
+
+}

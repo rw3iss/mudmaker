@@ -1,6 +1,6 @@
 export const environment = {
 
 	production: false,
-	API_BASE: 'http://localhost:3001',
+	API_BASE: 'http://localhost:3001'
 
 };

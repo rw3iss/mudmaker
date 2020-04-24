@@ -1,15 +1,26 @@
 @import "./includes/vars";
-@import "./defaults";
-// browser resets, basic global stuff
-@import "./layout";
-// flex layout, padding, spacing
-@import "./text";
-// text, font styling
 
-@import "./controls/controls";
+// browser resets, basic global stuff
+@import "./defaults";
+
+// flex layout, padding, spacing
+@import "./layout";
+
+// text, font styling
+@import "./text";
+
 // global controls (ie. inputs, buttons)
-@import "./controls/forms";
+@import "./controls/controls";
+
 // form fields
+@import "./controls/forms";
+
+// icons
 @import "./controls/icons";
 
-@import "./shared/index"; // import-once/shared stuff
+// import-once/shared stuff
+@import "./shared/index";
+
+// jqwidget themes
+@import '../../node_modules/jqwidgets-ng/jqwidgets/styles/jqx.base.css';
+@import '../../node_modules/jqwidgets-ng/jqwidgets/styles/jqx.dark.css';

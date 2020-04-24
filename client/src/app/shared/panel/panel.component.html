@@ -1,0 +1,9 @@
+<div [ngClass]="{'panel': true, 'open': isOpen, 'closed': !isOpen}" #thePanel>
+        
+    <div class="title" #titleBar (click)="titleClick.emit($event)">{{title}}</div>
+
+    <div class="content">
+        <ng-content></ng-content>
+    </div>
+
+</div> 
