@@ -130,19 +130,6 @@ export class EditorComponent implements OnInit {
         this.changeDetector.detectChanges();
     }
 
-    public canvasDragStart(event) {
-        this.isDraggingCanvas = true;
-        console.log('dragstart', event);
-        this.canvasDragStartEvent = event;
-    }
-
-    public itemDragStart(item, gridPt, event) {
-        this.isDraggingItem = true;
-        this.itemDragStartEvent = event;
-        this.draggingItem = item;
-        console.log('DRAG START', item);
-    }
-
     public initEditor() {
         const self = this;
 
@@ -165,6 +152,7 @@ export class EditorComponent implements OnInit {
                     let existingRoom = this.roomAtGridPt(this.mouseDownPos.x, this.mouseDownPos.y);
                     if (existingRoom) {
                         this.mouseMode = MouseMode.Drag;
+                        this.selectRoom(existingRoom, event, true);
                         this.itemDragStart(existingRoom, this.mouseDownPos, event);
                     } else {
                         this.mouseMode = MouseMode.Insert;
@@ -213,7 +201,6 @@ export class EditorComponent implements OnInit {
 
             // Left click drag
             if (this.mouseMode == MouseMode.Insert) {
-                console.log('INSERT');
                 if (!existingRoom)
                     this.addRoom(gridPt.x, gridPt.y, event);
             } else if (this.mouseMode == MouseMode.Drag) {
@@ -266,6 +253,19 @@ export class EditorComponent implements OnInit {
         }
     }
 
+    public canvasDragStart(event) {
+        this.isDraggingCanvas = true;
+        console.log('dragstart', event);
+        this.canvasDragStartEvent = event;
+    }
+
+    public itemDragStart(item, gridPt, event) {
+        this.isDraggingItem = true;
+        this.itemDragStartEvent = event;
+        this.draggingItem = item;
+        console.log('DRAG START', item);
+    }
+
     public moveItem(event, item) {
         let { x, y } = CanvasUtils.mousePos(event);
         let pt = this.findGridPoint(x, y);
@@ -302,7 +302,7 @@ export class EditorComponent implements OnInit {
             var r =  this.area.rooms[i];
             
             if (r.x == x && r.y == y) {
-                r.selected = true;
+                //r.selected = true;
                 return r;
             }
 
