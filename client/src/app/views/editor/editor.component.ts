@@ -7,6 +7,7 @@ import { User } from 'src/app/lib/models/User';
 import RoomView from './RoomView';
 import CanvasUtils from './CanvasUtils';
 import { jqxWindowComponent } from 'jqwidgets-ng/jqxwindow';
+import { Xliff } from '@angular/compiler';
 
 
 // const BACKGROUND_COLOR = "#6a6a7a";
@@ -58,6 +59,7 @@ export class EditorComponent implements OnInit {
     public baseRoomSize = 16;
     public baseGridSize = 26;
     public zoomIncr = 10;
+    public zoomPos = null;
     public currZoomPerc = 100;
 
     public isDraggingItem: boolean;
@@ -186,7 +188,6 @@ export class EditorComponent implements OnInit {
             // mousewheel up, or regular click up
             if (event.which == 2 ||
                 (event.which == 1 && (this.mouseDownPos.x == mouseUpPos.x && this.mouseDownPos.y == mouseUpPos.y)) ) {
-                    console.log('click', this.mouseDownPos, mouseUpPos)
                 self.handleCanvasClick(mouseUpPos.x, mouseUpPos.y, event);
             }
 
@@ -222,11 +223,45 @@ export class EditorComponent implements OnInit {
         })
 
 		this.canvas.addEventListener('wheel', (event: any) => {
+            
             let direction = event.deltaY < 0 ? 'UP' : 'DOWN';
-            let movement = Math.abs(event.deltaY);
+            let newZoom;
+            
             if (direction == 'UP') {
+                if (this.currZoomPerc >= 200)
+                    return;
+                newZoom = this.currZoomPerc + this.zoomIncr;
+            } else {
+                if (this.currZoomPerc <= 50)
+                    return;
+                newZoom = this.currZoomPerc - this.zoomIncr;
+            }
+
+            // on wheel: take 10% of distance from 0,0 to event grid pos, and set offset to opposite of this.
+
+            this.zoomPos = CanvasUtils.mousePos(event);
+            let gridPt = this.findGridPoint(this.zoomPos.x, this.zoomPos.y);
+            let gridSize = this.baseGridSize * (newZoom/100);
+ 
+            let distX = this.zoomPos.x + this.gridOffsetX;
+            let distY = this.zoomPos.y + this.gridOffsetY;
+            // let distX = gridPt.x * gridSize;
+            // let distY = gridPt.y * gridSize;
+
+            console.log('grid zoom', gridPt, distX, distY);
+
+            let offsetX = distX * .1;
+            let offsetY = distY * .1;
+
+            console.log('wheel', event);
+
+            if (direction == 'UP') {
+                this.gridOffsetX += offsetX;
+                this.gridOffsetY += offsetY;
                 this.zoomIn();
             } else {
+                this.gridOffsetX -= offsetX;
+                this.gridOffsetY -= offsetY;
                 this.zoomOut();
             }
         });
@@ -322,6 +357,9 @@ export class EditorComponent implements OnInit {
         this.currZoomPerc += this.zoomIncr;
         
         this.renderAll();
+        
+        this.gridTempOffsetX = 0;
+        this.gridTempOffsetY = 0;
     }
 
     public zoomOut() {
@@ -329,6 +367,9 @@ export class EditorComponent implements OnInit {
             return;
         this.currZoomPerc -= this.zoomIncr;
         this.renderAll();
+
+        this.gridTempOffsetX = 0;
+        this.gridTempOffsetY = 0;
     }
 
     public onResize($event) {
@@ -513,6 +554,14 @@ export class EditorComponent implements OnInit {
                 CanvasUtils.drawStrokeRect(ctx, ColorScheme.HIGHLIGHT_BORDER_COLOR, x, y, x+gridSize, y+gridSize);
             }
         }
+    
+        // if (roomX )
+        let window = {
+            x1: 0,
+            y1: 0,
+            x2: CanvasUtils.ww(),
+            y2: CanvasUtils.wh()
+        }
 
         // Rooms
         for(let i in this.area.rooms) {
@@ -521,6 +570,10 @@ export class EditorComponent implements OnInit {
             let width = this.baseRoomSize * zoom;
             let cX = (r.x * (gridSize)) + gridSize/2 - offsetX;///2;
             let cY = (r.y * (gridSize)) + gridSize/2 - offsetY;//this.baseGridSize*zoom/2;
+
+            // only draw if the room sits within screen coords
+            if (cX < window.x1 || cX > window.x2 || cY < window.y1 || cY > window.y2)
+                continue;
 
             //draw exits first so room block covers them
             this.drawRoomExits(r);
@@ -593,38 +646,12 @@ export class EditorComponent implements OnInit {
 
 
 
-
-    
-	public toggleExitSelection(exit) {
-	}
-
-
 	public saveArea() {
 	}
 
 	public loadArea() {
 	}
 
-
-	public addNewObject(room) {
-	}
-
-	public removeObject(o) {
-	}
-
-
-	public addNewItem(room) {
-	}
-
-	public removeItem(o) {
-	}
-
-
-	public addNewNpc(room) {
-	}
-
-	public removeNpc(o) {
-	}
 
 
 	public areaNameChanged(t) {

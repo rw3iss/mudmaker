@@ -72,6 +72,7 @@
             </div>
         </div>
     </div>
+    
 
 	<div id="area-info" *ngIf="area != null">
 		<div class="hidden-input" hiddeninput>
@@ -82,185 +83,17 @@
         </div>
     </div>
 
+
     <jqxWindow #windowReference [width]="100" [height]="200" [theme]="'dark'" *ngIf="editingRoom"
-        [minHeight]="100" [minWidth]="200"
+        [minHeight]="400" [minWidth]="400"
         [showCollapseButton]="true">
 
         <div #windowHeader>
-            <span>Properties</span>
+            <span>Room Properties</span>
         </div>
-        <div style="overflow: hidden;" #windowContent>
-            
-            <div class="tabset">
-                
-                <div class="tab">
-                    
-                    <span class="title" (click)="togglePanel('roomProperties')">Rooms Properties</span>
+        <div #windowContent>
 
-                    <div class="form-group">
-                        <label for="textArea" class="col-lg-2 control-label">Filename</label>
-                        <div class="col-lg-10">
-                            <input type="text" class="form-control" id="room_filename" ng-model="editingRoom.filename" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="inputEmail" class="col-lg-2 control-label">Short Description</label>
-                        <div class="col-lg-10">
-                        <input type="text" class="form-control" id="room_shortdesc" ng-model="editingRoom.shortDescription" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="textArea" class="col-lg-2 control-label">Long Description</label>
-                        <div class="col-lg-10">
-                        <textarea class="form-control" rows="3" id="room_longdesc" ng-model="editingRoom.longDescription"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="exits" class="col-lg-2 control-label">Exits</label>
-                        <div class="col-lg-10">
-                            <input type="checkbox" value="n" name="editingRoom.exits" ng-checked="editingRoom.exits.indexOf('n') > -1" (click)="toggleExitSelection('n')" />North
-                            <input type="checkbox" value="s" name="editingRoom.exits" ng-checked="editingRoom.exits.indexOf('s') > -1" (click)="toggleExitSelection('s')" />South
-                            <input type="checkbox" value="e" name="editingRoom.exits" ng-checked="editingRoom.exits.indexOf('e') > -1" (click)="toggleExitSelection('e')"/>East
-                            <input type="checkbox" value="w" name="editingRoom.exits" ng-checked="editingRoom.exits.indexOf('w') > -1" (click)="toggleExitSelection('w')"/>West<br/>
-
-                            <input type="checkbox" value="nw" name="editingRoom.exits" ng-checked="editingRoom.exits.indexOf('nw') > -1" (click)="toggleExitSelection('nw')"/>Northwest
-                            <input type="checkbox" value="ne" name="editingRoom.exits" ng-checked="editingRoom.exits.indexOf('ne') > -1" (click)="toggleExitSelection('ne')"/>Northeast
-                            <input type="checkbox" value="sw" name="editingRoom.exits" ng-checked="editingRoom.exits.indexOf('sw') > -1" (click)="toggleExitSelection('sw')"/>Southwest
-                            <input type="checkbox" value="se" name="editingRoom.exits" ng-checked="editingRoom.exits.indexOf('se') > -1" (click)="toggleExitSelection('se')"/>Southeast<br/>
-
-                            <input type="checkbox" value="u" name="editingRoom.exits" ng-checked="editingRoom.exits.indexOf('u') > -1" (click)="toggleExitSelection('u')"/>Up
-                            <input type="checkbox" value="d" name="editingRoom.exits" ng-checked="editingRoom.exits.indexOf('d') > -1" (click)="toggleExitSelection('d')"/>Down<br/>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tab">
-                    Items
-                    <table class="table table-striped">
-                        <thead>
-                        <tr *ngIf="editingRoom.items.length > 0">
-                            <th>#</th>
-                            <th>Aliases</th>
-                            <th>Description</th>
-                            <th>Edit</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td colspan="4">
-                                <button type="button" class="btn btn-primary btn-sm" (click)="addNewObject(editingRoom)">Add new object</button>
-                            </td>
-                        </tr>
-                        <tr *ngFor="let o in editingRoom.items">
-                            <td class="id">{{o.id}}</td>
-                            <td class="aliases">
-                                <span class="read-label" *ngIf="o.editing == false">{{o.aliases}}</span>
-                                <input *ngIf="o.editing == true" ng-model="o.aliases" type="text" />
-                            </td>
-                            <td class="longDescr">
-                                <span class="read-label" *ngIf="o.editing == false">{{o.longDescription}}</span>
-                                <textarea *ngIf="o.editing == true" ng-model="o.longDesc" type="text"></textarea>
-                            </td>
-                            <td class="edit">
-                                <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == true" (click)="removeObject(o)">Remove</button>
-                                <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == false" (click)="o.editing = true">Edit</button>
-                                <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == true" (click)="o.editing = false">Save</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="tab">
-                    Items
-                    <table class="table table-striped table-hover ">
-                        <thead>
-                        <tr *ngIf="editingRoom.items.length > 0">
-                            <th>#</th>
-                            <th>Aliases</th>
-                            <th>Short Description</th>
-                            <th>Long Description</th>
-                            <th>Edit</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td colspan="4">
-                                <button type="button" class="btn btn-primary btn-sm" (click)="addNewItem(editingRoom)">Add new item</button>
-                            </td>
-                        </tr>
-                        <tr *ngFor="let o in editingRoom.items">
-                            <td class="id">{{o.id}}</td>
-                            <td class="aliases">
-                                <span class="read-label" *ngIf="o.editing == false">{{o.aliases}}</span>
-                                <input *ngIf="o.editing == true" ng-model="o.aliases" type="text" />
-                            </td>
-                            <td class="shortDescr">
-                                <span class="read-label" *ngIf="o.editing == false">{{o.shortDescription}}</span>
-                                <input *ngIf="o.editing == true" ng-model="o.shortDesc" type="text" />
-                            </td>
-                            <td class="longDescr">
-                                <span class="read-label" *ngIf="o.editing == false">{{o.longDescription}}</span>
-                                <textarea *ngIf="o.editing == true" ng-model="o.longDesc" type="text"></textarea>
-                            </td>
-                            <td class="edit">
-                                <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == true" (click)="removeItem(o)">Remove</button>
-                                <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == false" (click)="o.editing = true">Edit</button>
-                                <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == true" (click)="o.editing = false">Save</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="tab">
-                    NPCs
-                    <table class="table table-striped table-hover ">
-                        <thead>
-                        <tr *ngIf="editingRoom.npcs.length > 0">
-                            <th>#</th>
-                            <th>Aliases</th>
-                            <th>Name</th>
-                            <th>Short Description</th>
-                            <th>Long Description</th>
-                            <th>Edit</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td colspan="4">
-                                <button type="button" class="btn btn-primary btn-sm" (click)="addNewNpc(editingRoom)">Add new item</button>
-                            </td>
-                        </tr>
-                        <tr *ngFor="let o in editingRoom.npcs">
-                            <td class="id">{{o.id}}</td>
-                            <td class="aliases">
-                                <span class="read-label" *ngIf="o.editing == false">{{o.aliases}}</span>
-                                <input *ngIf="o.editing == true" ng-model="o.aliases" type="text" />
-                            </td>
-                            <td class="name">
-                                <span class="read-label" *ngIf="o.editing == false">{{o.name}}</span>
-                                <input *ngIf="o.editing == true" ng-model="o.name" type="text" />
-                            </td>
-                            <td class="shortDescr">
-                                <span class="read-label" *ngIf="o.editing == false">{{o.shortDesc}}</span>
-                                <input *ngIf="o.editing == true" ng-model="o.shortDesc" type="text" />
-                            </td>
-                            <td class="longDescr">
-                                <span class="read-label" *ngIf="o.editing == false">{{o.longDesc}}</span>
-                                <textarea *ngIf="o.editing == true" ng-model="o.longDesc" type="text"></textarea>
-                            </td>
-                            <td class="edit">
-                                <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == true" (click)="removeNpc(o)">Remove</button>
-                                <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == false" (click)="o.editing = true">Edit</button>
-                                <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == true" (click)="o.editing = false">Save</button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
+            <app-room-edit [(room)]="editingRoom"></app-room-edit>
 
         </div>
         

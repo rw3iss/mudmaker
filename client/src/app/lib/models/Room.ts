@@ -8,7 +8,7 @@ export class Room extends EntityBase {
     
     public longDescription: string;
 
-    public exits: Array<RoomExit>;
+    public exits: Array<string>;
 
     public items: Array<Object>;
 
@@ -19,7 +19,7 @@ export class Room extends EntityBase {
 
 	constructor() {
 		super();
-		this.exits = new Array<RoomExit>();
+		this.exits = new Array<string>();
 		this.items = new Array<Object>();
         this.npcs = new Array<NPC>();
         this.x = 0;

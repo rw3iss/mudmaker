@@ -1,0 +1,179 @@
+<div class="tabset" *ngIf="room">
+    
+    <div class="tab">
+
+        ID: {{room.id}}
+
+        <div class="form-group">
+            <label for="inputEmail" class="col-lg-2 control-label">Short Description</label>
+            <div class="col-lg-10">
+            <input type="text" class="form-control" id="room_shortdesc" ng-model="room.shortDescription" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="textArea" class="col-lg-2 control-label">Long Description</label>
+            <div class="col-lg-10">
+            <textarea class="form-control" rows="3" id="room_longdesc" ng-model="room.longDescription"></textarea>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="textArea" class="col-lg-2 control-label">Filename (optional)</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" id="room_filename" ng-model="room.filename" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="exits" class="col-lg-2 control-label">Exits</label>
+
+            <div class="direction-keymap">
+                <div class="row">
+                    <div (click)="toggleExit('nw')" [ngClass]="{'selected': room.exits['nw']}">NW</div>
+                    <div (click)="toggleExit('n')" [ngClass]="{'selected': room.exits['n']}">N</div>
+                    <div (click)="toggleExit('ne')" [ngClass]="{'selected': room.exits['ne']}">NE</div>
+                </div>
+                <div class="row">
+                    <div (click)="toggleExit('w')" [ngClass]="{'selected': room.exits['w']}">W</div>
+                    <div></div>
+                    <div (click)="toggleExit('e')" [ngClass]="{'selected': room.exits['e']}">E</div>
+                </div>
+                <div class="row">
+                    <div (click)="toggleExit('sw')" [ngClass]="{'selected': room.exits['sw']}">SW</div>
+                    <div (click)="toggleExit('s')" [ngClass]="{'selected': room.exits['s']}">S</div>
+                    <div (click)="toggleExit('se')" [ngClass]="{'selected': room.exits['se']}">SE</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!--div class="tab">
+        Items
+        {{room}}
+        <table class="table table-striped">
+            <thead>
+            <tr *ngIf="room.items.length > 0">
+                <th>#</th>
+                <th>Aliases</th>
+                <th>Description</th>
+                <th>Edit</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="4">
+                    <button type="button" class="btn btn-primary btn-sm" (click)="addNewObject(room)">Add new object</button>
+                </td>
+            </tr>
+            <tr *ngFor="let o in room.items">
+                <td class="id">{{o.id}}</td>
+                <td class="aliases">
+                    <span class="read-label" *ngIf="o.editing == false">{{o.aliases}}</span>
+                    <input *ngIf="o.editing == true" ng-model="o.aliases" type="text" />
+                </td>
+                <td class="longDescr">
+                    <span class="read-label" *ngIf="o.editing == false">{{o.longDescription}}</span>
+                    <textarea *ngIf="o.editing == true" ng-model="o.longDesc" type="text"></textarea>
+                </td>
+                <td class="edit">
+                    <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == true" (click)="removeObject(o)">Remove</button>
+                    <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == false" (click)="o.editing = true">Edit</button>
+                    <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == true" (click)="o.editing = false">Save</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div-->
+
+    <!--div class="tab">
+        Items
+        <table class="table table-striped table-hover ">
+            <thead>
+            <tr *ngIf="room.items.length > 0">
+                <th>#</th>
+                <th>Aliases</th>
+                <th>Short Description</th>
+                <th>Long Description</th>
+                <th>Edit</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="4">
+                    <button type="button" class="btn btn-primary btn-sm" (click)="addNewItem(room)">Add new item</button>
+                </td>
+            </tr>
+            <tr *ngFor="let o in room.items">
+                <td class="id">{{o.id}}</td>
+                <td class="aliases">
+                    <span class="read-label" *ngIf="o.editing == false">{{o.aliases}}</span>
+                    <input *ngIf="o.editing == true" ng-model="o.aliases" type="text" />
+                </td>
+                <td class="shortDescr">
+                    <span class="read-label" *ngIf="o.editing == false">{{o.shortDescription}}</span>
+                    <input *ngIf="o.editing == true" ng-model="o.shortDesc" type="text" />
+                </td>
+                <td class="longDescr">
+                    <span class="read-label" *ngIf="o.editing == false">{{o.longDescription}}</span>
+                    <textarea *ngIf="o.editing == true" ng-model="o.longDesc" type="text"></textarea>
+                </td>
+                <td class="edit">
+                    <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == true" (click)="removeItem(o)">Remove</button>
+                    <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == false" (click)="o.editing = true">Edit</button>
+                    <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == true" (click)="o.editing = false">Save</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div-->
+
+    <!--div class="tab">
+        NPCs
+        <table class="table table-striped table-hover ">
+            <thead>
+            <tr *ngIf="room.npcs.length > 0">
+                <th>#</th>
+                <th>Aliases</th>
+                <th>Name</th>
+                <th>Short Description</th>
+                <th>Long Description</th>
+                <th>Edit</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="4">
+                    <button type="button" class="btn btn-primary btn-sm" (click)="addNewNpc(room)">Add new item</button>
+                </td>
+            </tr>
+            <tr *ngFor="let o in room.npcs">
+                <td class="id">{{o.id}}</td>
+                <td class="aliases">
+                    <span class="read-label" *ngIf="o.editing == false">{{o.aliases}}</span>
+                    <input *ngIf="o.editing == true" ng-model="o.aliases" type="text" />
+                </td>
+                <td class="name">
+                    <span class="read-label" *ngIf="o.editing == false">{{o.name}}</span>
+                    <input *ngIf="o.editing == true" ng-model="o.name" type="text" />
+                </td>
+                <td class="shortDescr">
+                    <span class="read-label" *ngIf="o.editing == false">{{o.shortDesc}}</span>
+                    <input *ngIf="o.editing == true" ng-model="o.shortDesc" type="text" />
+                </td>
+                <td class="longDescr">
+                    <span class="read-label" *ngIf="o.editing == false">{{o.longDesc}}</span>
+                    <textarea *ngIf="o.editing == true" ng-model="o.longDesc" type="text"></textarea>
+                </td>
+                <td class="edit">
+                    <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == true" (click)="removeNpc(o)">Remove</button>
+                    <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == false" (click)="o.editing = true">Edit</button>
+                    <button type="button" class="btn btn-primary btn-sm" *ngIf="o.editing == true" (click)="o.editing = false">Save</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div-->
+
+</div>

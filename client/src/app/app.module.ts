@@ -19,6 +19,7 @@ import { HomeComponent } 	from './views/home/home.component';
 import { HelpComponent } 	from './views/help/help.component';
 import { LocalStorageService } from './lib/services/localstorage.service';
 import { jqxWindowModule } from 'jqwidgets-ng/jqxwindow';
+import { RoomEditComponent } from './views/editor/room-edit/room-edit.component';
 
 @NgModule({
 	declarations: [
@@ -32,7 +33,8 @@ import { jqxWindowModule } from 'jqwidgets-ng/jqxwindow';
 		ProfileComponent,
 		HomeComponent,
 		HelpComponent,
-        PanelComponent
+        PanelComponent,
+        RoomEditComponent
 	],
 	imports: [
 		BrowserModule,
